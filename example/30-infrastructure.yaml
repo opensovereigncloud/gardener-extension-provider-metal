@@ -1,0 +1,55 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shoot--foobar--metal
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: core-metal
+  namespace: shoot--foobar--metal
+type: Opaque
+data:
+  namespace: my-namespace
+  username: my-user
+  token: abcd12345
+---
+apiVersion: extensions.gardener.cloud/v1alpha1
+kind: Cluster
+metadata:
+  name: shoot--foobar--metal
+spec:
+  cloudProfile:
+    apiVersion: core.gardener.cloud/v1beta1
+    kind: CloudProfile
+  seed:
+    apiVersion: core.gardener.cloud/v1beta1
+    kind: Seed
+  shoot:
+    apiVersion: core.gardener.cloud/v1beta1
+    kind: Shoot
+    spec:
+      networking:
+        pods: 10.243.128.0/17
+        services: 10.243.0.0/17
+    status:
+      lastOperation:
+        state: Succeeded
+---
+apiVersion: extensions.gardener.cloud/v1alpha1
+kind: Infrastructure
+metadata:
+  name: metal-infra
+  namespace: shoot--foobar--metal
+spec:
+  type: metal
+  region: my-region
+  secretRef:
+    namespace: shoot--foobar--metal
+    name: core-metal
+  providerConfig:
+    apiVersion: metal.provider.extensions.gardener.cloud/v1alpha1
+    kind: InfrastructureConfig
+    #networkRef: # (optional)
+    #  name: my-network

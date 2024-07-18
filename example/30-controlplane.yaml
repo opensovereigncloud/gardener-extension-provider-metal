@@ -1,0 +1,68 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shoot--foobar--metal
+  labels:
+#    backup.gardener.cloud/provider: metal
+#    seed.gardener.cloud/provider: metal
+    shoot.gardener.cloud/provider: metal
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudprovider
+  namespace: shoot--foobar--metal
+type: Opaque
+data:
+  namespace: my-namespace
+  username: my-user
+  token: abcd12345
+---
+apiVersion: extensions.gardener.cloud/v1alpha1
+kind: Cluster
+metadata:
+  name: shoot--foobar--metal
+spec:
+  cloudProfile:
+    apiVersion: core.gardener.cloud/v1beta1
+    kind: CloudProfile
+  seed:
+    apiVersion: core.gardener.cloud/v1beta1
+    kind: Seed
+  shoot:
+    apiVersion: core.gardener.cloud/v1beta1
+    kind: Shoot
+    spec:
+      networking:
+        pods: 10.250.0.0/19
+      kubernetes:
+        version: 1.26.0
+      hibernation:
+        enabled: false
+    status:
+      lastOperation:
+        state: Succeeded
+---
+apiVersion: extensions.gardener.cloud/v1alpha1
+kind: ControlPlane
+metadata:
+  name: control-plane
+  namespace: shoot--foobar--metal
+spec:
+  type: metal
+  region: my-region
+  secretRef:
+    name: cloudprovider
+    namespace: shoot--foobar--metal
+  providerConfig:
+    apiVersion: metal.provider.extensions.gardener.cloud/v1alpha1
+    kind: ControlPlaneConfig
+    cloudControllerManager:
+      featureGates:
+        CustomResourceValidation: true
+  infrastructureProviderStatus:
+    apiVersion: metal.provider.extensions.gardener.cloud/v1alpha1
+    kind: InfrastructureStatus
+    #networkRef: # (optional)
+    #  name: my-network
