@@ -1,6 +1,9 @@
 name: Pull Request Code test
 
 on:
+  push:
+    branches:
+    - enh/update-gardener-199
   pull_request:
     types: [ assigned, opened, synchronize, reopened ]
     paths-ignore:
