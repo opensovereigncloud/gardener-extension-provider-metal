@@ -1,0 +1,7 @@
+speaker:
+  enabled: false
+
+ipAddressPool: []
+
+l2Advertisement:
+  enabled: false
