@@ -1,0 +1,9 @@
+bgp:
+  enabled: false
+  logSeverityScreen: Info
+  nodeToNodeMeshEnabled: false
+  listenPort: 179
+  bindMode: NodeIP
+  asNumber:
+  serviceExternalIPs: []
+  peers: []

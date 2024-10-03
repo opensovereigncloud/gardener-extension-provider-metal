@@ -342,13 +342,20 @@ func (vp *valuesProvider) getControlPlaneShootChartValues(cluster *extensionscon
 	if err != nil {
 		return nil, err
 	}
+
+	calicoBgp, err := getCalicoBgpChartValues(cp)
+	if err != nil {
+		return nil, err
+	}
+
 	return map[string]any{
 		metal.CloudControllerManagerName: map[string]any{"enabled": true},
 		metal.MetallbName:                metallb,
+		metal.CalicoBgpName:              calicoBgp,
 	}, nil
 }
 
-// getMetallbChartValues collects and returns the CCM chart values.
+// getMetallbChartValues collects and returns the MetalLB chart values.
 func getMetallbChartValues(
 	cpConfig *apismetal.ControlPlaneConfig,
 ) (map[string]any, error) {
@@ -373,6 +380,35 @@ func getMetallbChartValues(
 			"enabled": cpConfig.LoadBalancerConfig.MetallbConfig.EnableL2Advertisement,
 		},
 		"ipAddressPool": cpConfig.LoadBalancerConfig.MetallbConfig.IPAddressPool,
+	}, nil
+}
+
+// getCalicoBgpChartValues collects and returns the Calico BGP chart values.
+func getCalicoBgpChartValues(
+	cpConfig *apismetal.ControlPlaneConfig,
+) (map[string]any, error) {
+	if cpConfig.LoadBalancerConfig == nil || cpConfig.LoadBalancerConfig.CalicoBgpConfig == nil {
+		return map[string]any{
+			"enabled": false,
+		}, nil
+	}
+
+	if cpConfig.LoadBalancerConfig.CalicoBgpConfig.BgpPeer != nil {
+		asNumber := cpConfig.LoadBalancerConfig.CalicoBgpConfig.ASNumber
+
+	}
+
+	for _, cidr := range cpConfig.LoadBalancerConfig.MetallbConfig.IPAddressPool {
+		if err := parseAddressPool(cidr); err != nil {
+			return nil, fmt.Errorf("invalid CIDR %q in pool: %w", cidr, err)
+		}
+	}
+
+	return map[string]any{
+		"enabled": true,
+		"peers": map[string]any{
+			"enabled": cpConfig.LoadBalancerConfig.MetallbConfig.EnableSpeaker,
+		},
 	}, nil
 }
 

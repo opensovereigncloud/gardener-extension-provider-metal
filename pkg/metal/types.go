@@ -47,6 +47,8 @@ const (
 	CloudProviderConfigName = "cloud-provider-config"
 	// CloudControllerManagerName is a constant for the name of the CloudController deployed by the worker controller.
 	CloudControllerManagerName = "cloud-controller-manager"
+	// CalicoBgpName is a constant for the name of the Calico BGP deployed by the worker controller.
+	CalicoBgpName = "calico-bgp"
 	// MetallbName is a constant for the name of the MetalLB deployed by the worker controller.
 	MetallbName = "metallb"
 	// MachineControllerManagerName is a constant for the name of the machine-controller-manager.
