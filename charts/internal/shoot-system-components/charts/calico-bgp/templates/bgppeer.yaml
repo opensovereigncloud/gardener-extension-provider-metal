@@ -1,3 +1,4 @@
+{{- if .Values.bgp.enabled }}
 {{- if .Values.bgp.bgpPeer }}
 {{- range $peer := .Values.bgp.bgpPeer }}
 ---
@@ -6,10 +7,11 @@ kind: BGPPeer
 metadata:
   name: bgppeer-{{ $peer.asNumber }}-{{ $peer.peerIP }}
 spec:
-  asNumber: {{ required ".peer.asNumber is required" $peer.asNumber }}
+  asNumber: {{ $peer.asNumber }}
   {{- if $peer.nodeSelector }}
   nodeSelector: {{ $peer.nodeSelector }}
   {{- end }}
-  peerIP: {{ required ".peer.peerIP is required" $peer.peerIP }}
+  peerIP: {{ $peer.peerIP }}
+{{- end }}
 {{- end }}
 {{- end }}

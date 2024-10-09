@@ -289,6 +289,9 @@ var _ = Describe("Valueprovider Reconcile", func() {
 				},
 				"calico-bgp": map[string]any{
 					"enabled": false,
+					"bgp": map[string]any{
+						"enabled": false,
+					},
 				},
 			}))
 		})
@@ -384,6 +387,9 @@ var _ = Describe("Valueprovider Reconcile", func() {
 				},
 				"calico-bgp": map[string]any{
 					"enabled": false,
+					"bgp": map[string]any{
+						"enabled": false,
+					},
 				},
 			}))
 		})
@@ -489,6 +495,7 @@ var _ = Describe("Valueprovider Reconcile", func() {
 				"calico-bgp": map[string]any{
 					"enabled": true,
 					"bgp": map[string]any{
+						"enabled":                true,
 						"asNumber":               12345,
 						"serviceLoadBalancerIPs": []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},
 						"serviceExternalIPs":     []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},

@@ -391,6 +391,9 @@ func getCalicoBgpChartValues(
 	if cpConfig.LoadBalancerConfig == nil || cpConfig.LoadBalancerConfig.CalicoBgpConfig == nil {
 		return map[string]any{
 			"enabled": false,
+			"bgp": map[string]any{
+				"enabled": false,
+			},
 		}, nil
 	}
 
@@ -438,6 +441,7 @@ func getCalicoBgpChartValues(
 	return map[string]any{
 		"enabled": true,
 		"bgp": map[string]any{
+			"enabled":                true,
 			"asNumber":               cpConfig.LoadBalancerConfig.CalicoBgpConfig.ASNumber,
 			"serviceLoadBalancerIPs": serviceLbIPs,
 			"serviceExternalIPs":     serviceExtIPs,
