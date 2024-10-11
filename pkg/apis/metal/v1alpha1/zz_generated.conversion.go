@@ -316,6 +316,7 @@ func Convert_metal_ControlPlaneConfig_To_v1alpha1_ControlPlaneConfig(in *metal.C
 
 func autoConvert_v1alpha1_IgnitionConfig_To_metal_IgnitionConfig(in *IgnitionConfig, out *metal.IgnitionConfig, s conversion.Scope) error {
 	out.Raw = in.Raw
+	out.Override = in.Override
 	return nil
 }
 
@@ -326,6 +327,7 @@ func Convert_v1alpha1_IgnitionConfig_To_metal_IgnitionConfig(in *IgnitionConfig,
 
 func autoConvert_metal_IgnitionConfig_To_v1alpha1_IgnitionConfig(in *metal.IgnitionConfig, out *IgnitionConfig, s conversion.Scope) error {
 	out.Raw = in.Raw
+	out.Override = in.Override
 	return nil
 }
 

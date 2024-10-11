@@ -40,8 +40,10 @@ const (
 	ImageFieldName = "image"
 	// ServerLabelsFieldName is the name of the server labels field
 	ServerLabelsFieldName = "serverLabels"
-	// ExtraIgnition is the name of the ignition field
+	// IgnitionFieldName is the name of the ignition field
 	IgnitionFieldName = "ignition"
+	// IgnitionOverrideFieldName is the name of the ignitionOverride field
+	IgnitionOverrideFieldName = "ignitionOverride"
 	// ClusterNameLabel is the name is the label key of the cluster name
 	ClusterNameLabel = "extension.metal.dev/cluster-name"
 

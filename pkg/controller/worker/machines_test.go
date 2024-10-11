@@ -114,7 +114,8 @@ var _ = Describe("Machines", func() {
 				Worker: map[string]metalv1alpha1.WorkerConfig{
 					pool.Name: {
 						ExtraIgnition: &metalv1alpha1.IgnitionConfig{
-							Raw: "abc",
+							Raw:      "abc",
+							Override: true,
 						},
 					},
 				},
@@ -133,7 +134,8 @@ var _ = Describe("Machines", func() {
 				metal.ServerLabelsFieldName: map[string]string{
 					"foo": "bar",
 				},
-				metal.IgnitionFieldName: "abc",
+				metal.IgnitionFieldName:         "abc",
+				metal.IgnitionOverrideFieldName: true,
 			}
 
 			Eventually(Object(machineClass)).Should(SatisfyAll(

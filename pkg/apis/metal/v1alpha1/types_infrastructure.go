@@ -14,6 +14,11 @@ type IgnitionConfig struct {
 	// Raw contains an inline ignition config, which is merged with the config from the os extension.
 	// +optional
 	Raw string `json:"raw,omitempty"`
+
+	// Override configures, if ignition keys set by the os-extension can be merged
+	// with extra ignition.
+	// +optional
+	Override bool `json:"override,omitempty"`
 }
 
 // WorkerConfig contains settings per pool, which are specific to the metal-operator.

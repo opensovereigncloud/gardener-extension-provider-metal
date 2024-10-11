@@ -11,7 +11,8 @@ import (
 
 // IgnitionConfig contains ignition settings.
 type IgnitionConfig struct {
-	Raw string
+	Raw      string
+	Override bool
 }
 
 // WorkerConfig contains settings per pool, which are specific to the metal-operator.

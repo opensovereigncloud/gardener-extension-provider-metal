@@ -119,6 +119,7 @@ func (w *workerDelegate) generateMachineClassAndSecrets() ([]*machinecontrollerv
 		metalConfig, ok := infrastructureConfig.Worker[pool.Name]
 		if ok && metalConfig.ExtraIgnition != nil {
 			machineClassProviderSpec[metal.IgnitionFieldName] = metalConfig.ExtraIgnition.Raw
+			machineClassProviderSpec[metal.IgnitionOverrideFieldName] = metalConfig.ExtraIgnition.Override
 		}
 
 		for zoneIndex, zone := range pool.Zones {
