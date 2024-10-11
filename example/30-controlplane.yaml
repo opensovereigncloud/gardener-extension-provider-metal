@@ -61,6 +61,19 @@ spec:
     cloudControllerManager:
       featureGates:
         CustomResourceValidation: true
+      loadBalancerConfig:
+        metallbConfig:
+          ipAddressPool:
+          - 10.10.10.0/24
+        calicoBgpConfig:
+          asNumber: 64512
+          serviceLoadBalancerIPs:
+           - 10.10.10.0/24
+          bgpPeer:
+            - peerIP: 1.2.3.4
+              asNumber: 64512
+            - peerIP: 1.2.3.5
+              asNumber: 64512
   infrastructureProviderStatus:
     apiVersion: metal.provider.extensions.gardener.cloud/v1alpha1
     kind: InfrastructureStatus
