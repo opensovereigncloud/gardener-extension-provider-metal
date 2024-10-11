@@ -18,7 +18,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/utils/ptr"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
 	metalv1alpha1 "github.com/ironcore-dev/gardener-extension-provider-metal/pkg/apis/metal/v1alpha1"
 	"github.com/ironcore-dev/gardener-extension-provider-metal/pkg/metal"
@@ -33,12 +32,12 @@ func (w *workerDelegate) DeployMachineClasses(ctx context.Context) error {
 
 	// apply machine classes and machine secrets
 	for _, class := range machineClasses {
-		if _, err := controllerutil.CreateOrPatch(ctx, w.client, class, nil); err != nil {
+		if err := w.client.Patch(ctx, class, client.Apply, client.ForceOwnership, metal.FieldOwner); err != nil {
 			return fmt.Errorf("failed to create/patch machineclass %s: %w", client.ObjectKeyFromObject(class), err)
 		}
 	}
 	for _, secret := range machineClassSecrets {
-		if _, err := controllerutil.CreateOrPatch(ctx, w.client, secret, nil); err != nil {
+		if err := w.client.Patch(ctx, secret, client.Apply, client.ForceOwnership, metal.FieldOwner); err != nil {
 			return fmt.Errorf("failed to create/patch machineclass secret %s: %w", client.ObjectKeyFromObject(secret), err)
 		}
 	}
@@ -152,6 +151,10 @@ func (w *workerDelegate) generateMachineClassAndSecrets() ([]*machinecontrollerv
 			}
 
 			machineClass := &machinecontrollerv1alpha1.MachineClass{
+				TypeMeta: metav1.TypeMeta{
+					Kind:       "MachineClass",
+					APIVersion: machinecontrollerv1alpha1.SchemeGroupVersion.String(),
+				},
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      className,
 					Namespace: w.worker.Namespace,
@@ -172,6 +175,10 @@ func (w *workerDelegate) generateMachineClassAndSecrets() ([]*machinecontrollerv
 			}
 
 			machineClassSecret := &corev1.Secret{
+				TypeMeta: metav1.TypeMeta{
+					Kind:       "Secret",
+					APIVersion: corev1.SchemeGroupVersion.String(),
+				},
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      className,
 					Namespace: w.worker.Namespace,

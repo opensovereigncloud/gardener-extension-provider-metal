@@ -5,6 +5,7 @@ package metal
 
 import (
 	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 const (
@@ -63,6 +64,9 @@ const (
 	MachineControllerManagerVpaName = "machine-controller-manager-vpa"
 	// MachineControllerManagerMonitoringConfigName is the name of the ConfigMap containing monitoring stack configurations for machine-controller-manager.
 	MachineControllerManagerMonitoringConfigName = "machine-controller-manager-monitoring-config"
+
+	// FieldOwner for server side apply
+	FieldOwner client.FieldOwner = ProviderName
 )
 
 var (
