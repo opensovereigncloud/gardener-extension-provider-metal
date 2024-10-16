@@ -46,9 +46,7 @@ string
 <td>
 <code>clientConnection</code></br>
 <em>
-<a href="https://godoc.org/k8s.io/component-base/config/v1alpha1#ClientConnectionConfiguration">
-Kubernetes v1alpha1.ClientConnectionConfiguration
-</a>
+invalid type
 </em>
 </td>
 <td>
@@ -74,9 +72,7 @@ ETCD
 <td>
 <code>healthCheckConfig</code></br>
 <em>
-<a href="https://github.com/gardener/gardener/extensions/pkg/apis/config">
-github.com/gardener/gardener/extensions/pkg/apis/config/v1alpha1.HealthCheckConfig
-</a>
+invalid type
 </em>
 </td>
 <td>
@@ -209,9 +205,7 @@ string
 <td>
 <code>capacity</code></br>
 <em>
-<a href="https://godoc.org/k8s.io/apimachinery/pkg/api/resource#Quantity">
-k8s.io/apimachinery/pkg/api/resource.Quantity
-</a>
+invalid type
 </em>
 </td>
 <td>
