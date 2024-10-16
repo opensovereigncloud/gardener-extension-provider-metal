@@ -5,6 +5,7 @@ package metal
 
 import (
 	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 const (
@@ -38,8 +39,12 @@ const (
 	UserDataFieldName = "userData"
 	// ImageFieldName is the name of the image field
 	ImageFieldName = "image"
-	// ServerLabels is the name of the server labels field
-	ServerLabels = "serverLabels"
+	// ServerLabelsFieldName is the name of the server labels field
+	ServerLabelsFieldName = "serverLabels"
+	// IgnitionFieldName is the name of the ignition field
+	IgnitionFieldName = "ignition"
+	// IgnitionOverrideFieldName is the name of the ignitionOverride field
+	IgnitionOverrideFieldName = "ignitionOverride"
 	// ClusterNameLabel is the name is the label key of the cluster name
 	ClusterNameLabel = "extension.metal.dev/cluster-name"
 
@@ -59,6 +64,9 @@ const (
 	MachineControllerManagerVpaName = "machine-controller-manager-vpa"
 	// MachineControllerManagerMonitoringConfigName is the name of the ConfigMap containing monitoring stack configurations for machine-controller-manager.
 	MachineControllerManagerMonitoringConfigName = "machine-controller-manager-monitoring-config"
+
+	// FieldOwner for server side apply
+	FieldOwner client.FieldOwner = ProviderName
 )
 
 var (
