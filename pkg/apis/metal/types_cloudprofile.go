@@ -19,12 +19,6 @@ type CloudProfileConfig struct {
 	MachineImages []MachineImages
 	// RegionConfigs is the list of supported regions.
 	RegionConfigs []RegionConfig
-	MachineTypes  []MachineType
-}
-
-type MachineType struct {
-	Name         string
-	ServerLabels map[string]string
 }
 
 // MachineImages is a mapping from logical names and versions to provider-specific identifiers.

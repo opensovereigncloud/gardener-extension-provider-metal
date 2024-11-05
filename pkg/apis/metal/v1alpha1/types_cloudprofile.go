@@ -19,12 +19,6 @@ type CloudProfileConfig struct {
 	MachineImages []MachineImages `json:"machineImages"`
 	// RegionConfigs is the list of supported regions.
 	RegionConfigs []RegionConfig `json:"regionConfigs,omitempty"`
-	MachineTypes  []MachineType  `json:"machineTypes,omitempty"`
-}
-
-type MachineType struct {
-	Name         string            `json:"name"`
-	ServerLabels map[string]string `json:"serverLabels,omitempty"`
 }
 
 // MachineImages is a mapping from logical names and versions to provider-specific identifiers.
