@@ -47,6 +47,7 @@ type MachineImage struct {
 
 // IgnitionConfig contains ignition settings.
 type IgnitionConfig struct {
-	Raw      string
-	Override bool
+	Raw               string
+	IgnitionSecretRef string
+	Override          bool
 }

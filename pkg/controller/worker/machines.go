@@ -118,8 +118,12 @@ func (w *workerDelegate) generateMachineClassAndSecrets(ctx context.Context) ([]
 			metal.ImageFieldName:        machineImage,
 			metal.ServerLabelsFieldName: serverLabels,
 		}
-		if workerConfig.ExtraIgnition != nil {
-			machineClassProviderSpec[metal.IgnitionFieldName] = workerConfig.ExtraIgnition.Raw
+		if workerConfig.ExtraIgnition != nil && (workerConfig.ExtraIgnition.Raw != "" || workerConfig.ExtraIgnition.IgnitionSecretRef != "") {
+			mergedIgnition, err := w.getMergedIgnitionConfig(ctx, workerConfig)
+			if err != nil {
+				return nil, nil, err
+			}
+			machineClassProviderSpec[metal.IgnitionFieldName] = mergedIgnition
 			machineClassProviderSpec[metal.IgnitionOverrideFieldName] = workerConfig.ExtraIgnition.Override
 		}
 
@@ -226,4 +230,29 @@ func (w *workerDelegate) getServerLabelsForMachine(machineType string, workerCon
 		return nil, fmt.Errorf("no server labels found for machine type %s or worker config", machineType)
 	}
 	return combinedLabels, nil
+}
+
+func (w *workerDelegate) getMergedIgnitionConfig(ctx context.Context, workerConfig *metalv1alpha1.WorkerConfig) (string, error) {
+	var mergedIgnition string
+
+	if workerConfig.ExtraIgnition.Raw != "" {
+		mergedIgnition = workerConfig.ExtraIgnition.Raw
+	}
+
+	if workerConfig.ExtraIgnition.IgnitionSecretRef != "" {
+		secret := &corev1.Secret{}
+		secretKey := client.ObjectKey{Namespace: w.worker.Namespace, Name: workerConfig.ExtraIgnition.IgnitionSecretRef}
+		if err := w.client.Get(ctx, secretKey, secret); err != nil {
+			return "", fmt.Errorf("failed to get ignition secret %s: %w", workerConfig.ExtraIgnition.IgnitionSecretRef, err)
+		}
+
+		secretContent, ok := secret.Data["ignition"]
+		if !ok {
+			return "", fmt.Errorf("ignition key not found in secret %s", workerConfig.ExtraIgnition.IgnitionSecretRef)
+		}
+
+		mergedIgnition += string(secretContent)
+	}
+
+	return mergedIgnition, nil
 }

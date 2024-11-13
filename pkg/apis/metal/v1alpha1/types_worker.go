@@ -54,6 +54,10 @@ type IgnitionConfig struct {
 	// +optional
 	Raw string `json:"raw,omitempty"`
 
+	// IgnitionSecretRef is a reference to a secret containing the ignition config.
+	// +optional
+	IgnitionSecretRef string `json:"ignitionSecretRef,omitempty"`
+
 	// Override configures, if ignition keys set by the os-extension are overridden
 	// by extra ignition.
 	// +optional

@@ -341,6 +341,18 @@ string
 </tr>
 <tr>
 <td>
+<code>ignitionSecretRef</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>IgnitionSecretRef is a reference to a secret containing the ignition config.</p>
+</td>
+</tr>
+<tr>
+<td>
 <code>override</code></br>
 <em>
 bool
