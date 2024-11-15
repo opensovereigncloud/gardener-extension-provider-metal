@@ -32,6 +32,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/envtest/komega"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"sigs.k8s.io/yaml"
 
 	apiv1alpha1 "github.com/ironcore-dev/gardener-extension-provider-metal/pkg/apis/metal/v1alpha1"
 )
@@ -115,6 +116,7 @@ var _ = BeforeSuite(func() {
 func SetupTest() (*corev1.Namespace, *gardener.ChartApplier) {
 	var chartApplier gardener.ChartApplier
 	ns := &corev1.Namespace{}
+	ign := &corev1.Secret{}
 
 	BeforeEach(func(ctx SpecContext) {
 		var err error
@@ -132,12 +134,44 @@ func SetupTest() (*corev1.Namespace, *gardener.ChartApplier) {
 		volumeName := "test-volume"
 		volumeType := "fast"
 
+		dataYml := map[string]any{
+			"a": map[string]any{
+				"b": "foo",
+			},
+		}
+		yamlString, err := mapToString(dataYml)
+		Expect(err).NotTo(HaveOccurred())
+
+		dataYml2 := map[string]any{
+			"a": map[string]any{
+				"c": "bar",
+			},
+		}
+		yamlString2, err := mapToString(dataYml2)
+		Expect(err).NotTo(HaveOccurred())
+
+		*ign = corev1.Secret{
+			ObjectMeta: metav1.ObjectMeta{
+				GenerateName: "testign-",
+				Namespace:    ns.Name,
+			},
+			Data: map[string][]byte{
+				"ignition": []byte(yamlString2),
+			},
+		}
+		Expect(k8sClient.Create(ctx, ign)).To(Succeed(), "failed to create test ignition secret")
+		DeferCleanup(k8sClient.Delete, ign)
+
 		workerConfig = &apiv1alpha1.WorkerConfig{
 			ExtraServerLabels: map[string]string{
 				"foo1": "bar1",
 			},
+
 			ExtraIgnition: &apiv1alpha1.IgnitionConfig{
-				Raw:      "abc",
+				Raw: yamlString,
+				SecretRef: &corev1.LocalObjectReference{
+					Name: ign.Name,
+				},
 				Override: true,
 			},
 		}
@@ -250,4 +284,12 @@ func SetupTest() (*corev1.Namespace, *gardener.ChartApplier) {
 	})
 
 	return ns, &chartApplier
+}
+
+func mapToString(m map[string]interface{}) (string, error) {
+	yamlData, err := yaml.Marshal(m)
+	if err != nil {
+		return "", err
+	}
+	return string(yamlData), nil
 }

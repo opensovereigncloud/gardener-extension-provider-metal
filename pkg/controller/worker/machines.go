@@ -13,11 +13,13 @@ import (
 	v1beta1constants "github.com/gardener/gardener/pkg/apis/core/v1beta1/constants"
 	"github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
 	machinecontrollerv1alpha1 "github.com/gardener/machine-controller-manager/pkg/apis/machine/v1alpha1"
+	"github.com/imdario/mergo"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/utils/ptr"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/yaml"
 
 	metalv1alpha1 "github.com/ironcore-dev/gardener-extension-provider-metal/pkg/apis/metal/v1alpha1"
 	"github.com/ironcore-dev/gardener-extension-provider-metal/pkg/metal"
@@ -118,9 +120,14 @@ func (w *workerDelegate) generateMachineClassAndSecrets(ctx context.Context) ([]
 			metal.ImageFieldName:        machineImage,
 			metal.ServerLabelsFieldName: serverLabels,
 		}
+
 		if workerConfig.ExtraIgnition != nil {
-			machineClassProviderSpec[metal.IgnitionFieldName] = workerConfig.ExtraIgnition.Raw
-			machineClassProviderSpec[metal.IgnitionOverrideFieldName] = workerConfig.ExtraIgnition.Override
+			if mergedIgnition, err := w.mergeIgnitionConfig(ctx, workerConfig); err != nil {
+				return nil, nil, err
+			} else if mergedIgnition != "" {
+				machineClassProviderSpec[metal.IgnitionFieldName] = mergedIgnition
+				machineClassProviderSpec[metal.IgnitionOverrideFieldName] = workerConfig.ExtraIgnition.Override
+			}
 		}
 
 		for zoneIndex, zone := range pool.Zones {
@@ -226,4 +233,54 @@ func (w *workerDelegate) getServerLabelsForMachine(machineType string, workerCon
 		return nil, fmt.Errorf("no server labels found for machine type %s or worker config", machineType)
 	}
 	return combinedLabels, nil
+}
+
+func (w *workerDelegate) mergeIgnitionConfig(ctx context.Context, workerConfig *metalv1alpha1.WorkerConfig) (string, error) {
+	rawIgnition := &map[string]interface{}{}
+
+	if workerConfig.ExtraIgnition.Raw != "" {
+		if err := yaml.Unmarshal([]byte(workerConfig.ExtraIgnition.Raw), rawIgnition); err != nil {
+			return "", err
+		}
+	}
+
+	if workerConfig.ExtraIgnition.SecretRef != nil {
+		secret := &corev1.Secret{}
+		secretKey := client.ObjectKey{Namespace: w.worker.Namespace, Name: workerConfig.ExtraIgnition.SecretRef.Name}
+		if err := w.client.Get(ctx, secretKey, secret); err != nil {
+			return "", fmt.Errorf("failed to get ignition secret %s: %w", workerConfig.ExtraIgnition.SecretRef, err)
+		}
+
+		secretContent, ok := secret.Data[metal.IgnitionFieldName]
+		if !ok {
+			return "", fmt.Errorf("ignition key not found in secret %s", workerConfig.ExtraIgnition.SecretRef)
+		}
+
+		ignitionSecret := map[string]interface{}{}
+
+		if err := yaml.Unmarshal(secretContent, &ignitionSecret); err != nil {
+			return "", err
+		}
+
+		// append ignition
+		opt := mergo.WithAppendSlice
+
+		// merge both ignitions
+		err := mergo.Merge(rawIgnition, ignitionSecret, opt)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	// avoid converting empty string to an empty map with non-zero length
+	if len(*rawIgnition) == 0 {
+		return "", nil
+	}
+
+	mergedIgnition, err := yaml.Marshal(rawIgnition)
+	if err != nil {
+		return "", err
+	}
+
+	return string(mergedIgnition), nil
 }
