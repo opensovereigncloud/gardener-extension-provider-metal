@@ -47,6 +47,10 @@ const (
 	IgnitionOverrideFieldName = "ignitionOverride"
 	// ClusterNameLabel is the name is the label key of the cluster name
 	ClusterNameLabel = "extension.metal.dev/cluster-name"
+	// LocalMetalAPIAnnotation is the name of the annotation to mark a seed, which contains a local metal API shoot
+	LocalMetalAPIAnnotation = "metal.ironcore.dev/local-metal-api"
+	// AllowEgressToIstioIngressLabel is the label key to allow egress to the istio ingress gateway
+	AllowEgressToIstioIngressLabel = "networking.resources.gardener.cloud/to-all-istio-ingresses-istio-ingressgateway-tcp-9443"
 
 	// CloudProviderConfigName is the name of the secret containing the cloud provider config.
 	CloudProviderConfigName = "cloud-provider-config"
