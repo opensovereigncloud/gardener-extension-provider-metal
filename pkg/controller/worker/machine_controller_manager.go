@@ -19,14 +19,20 @@ func (w *workerDelegate) GetMachineControllerManagerChartValues(ctx context.Cont
 		return nil, err
 	}
 
+	podLabels := map[string]any{
+		v1beta1constants.LabelPodMaintenanceRestart: "true",
+	}
+	localAPI, ok := w.cluster.Seed.Annotations[metal.LocalMetalAPIAnnotation]
+	if ok && localAPI == "true" {
+		podLabels[metal.AllowEgressToIstioIngressLabel] = "allowed"
+	}
+
 	return map[string]any{
 		"providerName": metal.ProviderName,
 		"namespace": map[string]any{
 			"uid": namespace.UID,
 		},
-		"podLabels": map[string]any{
-			v1beta1constants.LabelPodMaintenanceRestart: "true",
-		},
+		"podLabels": podLabels,
 	}, nil
 }
 

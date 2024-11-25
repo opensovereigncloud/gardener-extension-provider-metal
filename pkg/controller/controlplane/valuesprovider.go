@@ -276,6 +276,14 @@ func getCCMChartValues(
 		return nil, fmt.Errorf("secret %q not found", cloudControllerManagerServerName)
 	}
 
+	podLabels := map[string]any{
+		v1beta1constants.LabelPodMaintenanceRestart: "true",
+	}
+	localAPI, ok := cluster.Seed.Annotations[metal.LocalMetalAPIAnnotation]
+	if ok && localAPI == "true" {
+		podLabels[metal.AllowEgressToIstioIngressLabel] = "allowed"
+	}
+
 	values := map[string]any{
 		"enabled":     true,
 		"replicas":    extensionscontroller.GetControlPlaneReplicas(cluster, scaledDown, 1),
@@ -284,9 +292,7 @@ func getCCMChartValues(
 		"podAnnotations": map[string]any{
 			"checksum/secret-" + internal.CloudProviderConfigMapName: checksums[internal.CloudProviderConfigMapName],
 		},
-		"podLabels": map[string]any{
-			v1beta1constants.LabelPodMaintenanceRestart: "true",
-		},
+		"podLabels":       podLabels,
 		"tlsCipherSuites": kutil.TLSCipherSuites,
 		"secrets": map[string]any{
 			"server": serverSecret.Name,
