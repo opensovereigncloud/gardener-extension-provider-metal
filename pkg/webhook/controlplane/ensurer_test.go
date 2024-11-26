@@ -29,6 +29,8 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	vpaautoscalingv1 "k8s.io/autoscaler/vertical-pod-autoscaler/pkg/apis/autoscaling.k8s.io/v1"
 	"k8s.io/utils/ptr"
+
+	"github.com/ironcore-dev/gardener-extension-provider-metal/pkg/metal"
 )
 
 const (
@@ -58,6 +60,13 @@ var _ = Describe("Ensurer", func() {
 					Spec: gardencorev1beta1.ShootSpec{
 						Kubernetes: gardencorev1beta1.Kubernetes{
 							Version: "1.26.0",
+						},
+					},
+				},
+				Seed: &gardencorev1beta1.Seed{
+					ObjectMeta: metav1.ObjectMeta{
+						Annotations: map[string]string{
+							metal.LocalMetalAPIAnnotation: "true",
 						},
 					},
 				},
@@ -250,7 +259,8 @@ var _ = Describe("Ensurer", func() {
 
 			It("should inject the sidecar container", func() {
 				Expect(deployment.Spec.Template.Spec.Containers).To(BeEmpty())
-				Expect(ensurer.EnsureMachineControllerManagerDeployment(ctx, nil, deployment, nil)).To(Succeed())
+				Expect(ensurer.EnsureMachineControllerManagerDeployment(ctx, eContextK8s, deployment, nil)).To(Succeed())
+				Expect(deployment.Spec.Template.Labels).To(HaveKeyWithValue(metal.AllowEgressToIstioIngressLabel, "allowed"))
 				Expect(deployment.Spec.Template.Spec.Containers).To(ConsistOf(corev1.Container{
 					Name:            "machine-controller-manager-provider-metal",
 					Image:           "foo:bar",
