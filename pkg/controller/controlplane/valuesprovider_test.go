@@ -92,7 +92,7 @@ var _ = Describe("Valueprovider Reconcile", func() {
 			Expect(cloudProviderConfig["clusterName"]).To(Equal(cluster.Name))
 			networkingConfig, ok := cloudProviderConfig["networking"].(map[string]any)
 			Expect(ok).To(BeTrue())
-			Expect(networkingConfig["configureNodeAddresses"]).To(Equal(true))
+			Expect(networkingConfig["configureNodeAddresses"]).To(BeTrue())
 		})
 	})
 
