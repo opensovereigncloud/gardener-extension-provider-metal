@@ -38,7 +38,7 @@ type CloudControllerManagerConfig struct {
 
 	// CloudControllerNetworking contains configuration settings for CCM networking.
 	// +optional
-	CloudControllerNetworking *CloudControllerNetworking `json:"cloudControllerNetworking,omitempty"`
+	CloudControllerNetworking *CloudControllerNetworking `json:"networking,omitempty"`
 }
 
 // LoadBalancerConfig contains configuration settings for the shoot loadbalancing.
