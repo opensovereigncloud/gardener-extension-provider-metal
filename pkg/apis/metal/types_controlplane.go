@@ -32,8 +32,8 @@ type CloudControllerManagerConfig struct {
 	// FeatureGates contains information about enabled feature gates.
 	FeatureGates map[string]bool
 
-	// CloudControllerNetworking contains configuration settings for CCM networking.
-	CloudControllerNetworking *CloudControllerNetworking
+	// Networking contains configuration settings for CCM networking.
+	Networking *CloudControllerNetworking
 }
 
 // LoadBalancerConfig contains configuration settings for the shoot loadbalancing.

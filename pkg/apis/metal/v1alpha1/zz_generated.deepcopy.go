@@ -76,8 +76,8 @@ func (in *CloudControllerManagerConfig) DeepCopyInto(out *CloudControllerManager
 			(*out)[key] = val
 		}
 	}
-	if in.CloudControllerNetworking != nil {
-		in, out := &in.CloudControllerNetworking, &out.CloudControllerNetworking
+	if in.Networking != nil {
+		in, out := &in.Networking, &out.Networking
 		*out = new(CloudControllerNetworking)
 		**out = **in
 	}

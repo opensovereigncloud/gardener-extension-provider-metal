@@ -243,7 +243,7 @@ var _ = Describe("Valueprovider Reconcile", func() {
 									FeatureGates: map[string]bool{
 										"CustomResourceValidation": true,
 									},
-									CloudControllerNetworking: &apismetal.CloudControllerNetworking{
+									Networking: &apismetal.CloudControllerNetworking{
 										ConfigureNodeAddresses: false,
 									},
 								},

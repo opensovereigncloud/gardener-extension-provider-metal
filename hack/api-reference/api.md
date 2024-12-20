@@ -310,7 +310,7 @@ map[string]bool
 </tr>
 <tr>
 <td>
-<code>cloudControllerNetworking</code></br>
+<code>networking</code></br>
 <em>
 <a href="#metal.provider.extensions.gardener.cloud/v1alpha1.CloudControllerNetworking">
 CloudControllerNetworking
@@ -319,7 +319,7 @@ CloudControllerNetworking
 </td>
 <td>
 <em>(Optional)</em>
-<p>CloudControllerNetworking contains configuration settings for CCM networking.</p>
+<p>Networking contains configuration settings for CCM networking.</p>
 </td>
 </tr>
 </tbody>

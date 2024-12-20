@@ -36,9 +36,9 @@ type CloudControllerManagerConfig struct {
 	// +optional
 	FeatureGates map[string]bool `json:"featureGates,omitempty"`
 
-	// CloudControllerNetworking contains configuration settings for CCM networking.
+	// Networking contains configuration settings for CCM networking.
 	// +optional
-	CloudControllerNetworking *CloudControllerNetworking `json:"networking,omitempty"`
+	Networking *CloudControllerNetworking `json:"networking,omitempty"`
 }
 
 // LoadBalancerConfig contains configuration settings for the shoot loadbalancing.

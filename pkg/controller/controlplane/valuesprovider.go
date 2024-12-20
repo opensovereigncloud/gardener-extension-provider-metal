@@ -301,9 +301,9 @@ func getCCMChartValues(
 
 	if cpConfig.CloudControllerManager != nil {
 		values[metal.CloudControllerManagerFeatureGatesKeyName] = cpConfig.CloudControllerManager.FeatureGates
-		if cpConfig.CloudControllerManager.CloudControllerNetworking != nil {
+		if cpConfig.CloudControllerManager.Networking != nil {
 			values[metal.CloudControllerManagerNetworkingKeyName] = map[string]any{
-				metal.CloudControllerManagerNodeAddressesConfigKeyName: cpConfig.CloudControllerManager.CloudControllerNetworking.ConfigureNodeAddresses,
+				metal.CloudControllerManagerNodeAddressesConfigKeyName: cpConfig.CloudControllerManager.Networking.ConfigureNodeAddresses,
 			}
 		}
 	}
