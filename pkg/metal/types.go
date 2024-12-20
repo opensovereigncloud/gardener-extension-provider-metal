@@ -56,6 +56,12 @@ const (
 	CloudProviderConfigName = "cloud-provider-config"
 	// CloudControllerManagerName is a constant for the name of the CloudController deployed by the worker controller.
 	CloudControllerManagerName = "cloud-controller-manager"
+	// CloudControllerManagerFeatureGatesKeyName is the key name for the feature gates key in CCM configuration
+	CloudControllerManagerFeatureGatesKeyName = "featureGates"
+	// CloudControllerManagerNetworkingKeyName is the key name for the networking key in CCM configuration
+	CloudControllerManagerNetworkingKeyName = "networking"
+	// CloudControllerManagerNodeAddressesConfigKeyName is the key name for the networking key in CCM configuration
+	CloudControllerManagerNodeAddressesConfigKeyName = "configureNodeAddresses"
 	// CalicoBgpName is a constant for the name of the Calico BGP deployed by the worker controller.
 	CalicoBgpName = "calico-bgp"
 	// MetallbName is a constant for the name of the MetalLB deployed by the worker controller.

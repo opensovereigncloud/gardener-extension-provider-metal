@@ -300,7 +300,12 @@ func getCCMChartValues(
 	}
 
 	if cpConfig.CloudControllerManager != nil {
-		values["featureGates"] = cpConfig.CloudControllerManager.FeatureGates
+		values[metal.CloudControllerManagerFeatureGatesKeyName] = cpConfig.CloudControllerManager.FeatureGates
+		if cpConfig.CloudControllerManager.Networking != nil {
+			values[metal.CloudControllerManagerNetworkingKeyName] = map[string]any{
+				metal.CloudControllerManagerNodeAddressesConfigKeyName: cpConfig.CloudControllerManager.Networking.ConfigureNodeAddresses,
+			}
+		}
 	}
 
 	overlayEnabled, err := isOverlayEnabled(cluster.Shoot.Spec.Networking)

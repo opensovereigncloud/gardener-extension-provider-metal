@@ -8,6 +8,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 
 	apismetal "github.com/ironcore-dev/gardener-extension-provider-metal/pkg/apis/metal"
+	"github.com/ironcore-dev/gardener-extension-provider-metal/pkg/metal"
 )
 
 // ValidateControlPlaneConfig validates a ControlPlaneConfig object.
@@ -15,7 +16,7 @@ func ValidateControlPlaneConfig(controlPlaneConfig *apismetal.ControlPlaneConfig
 	allErrs := field.ErrorList{}
 
 	if controlPlaneConfig.CloudControllerManager != nil {
-		allErrs = append(allErrs, featurevalidation.ValidateFeatureGates(controlPlaneConfig.CloudControllerManager.FeatureGates, version, fldPath.Child("cloudControllerManager", "featureGates"))...)
+		allErrs = append(allErrs, featurevalidation.ValidateFeatureGates(controlPlaneConfig.CloudControllerManager.FeatureGates, version, fldPath.Child("cloudControllerManager", metal.CloudControllerManagerFeatureGatesKeyName))...)
 	}
 
 	// TODO add validation for IPs
