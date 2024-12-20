@@ -5,10 +5,10 @@ package validation
 
 import (
 	featurevalidation "github.com/gardener/gardener/pkg/utils/validation/features"
-	"github.com/ironcore-dev/gardener-extension-provider-metal/pkg/metal"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 
 	apismetal "github.com/ironcore-dev/gardener-extension-provider-metal/pkg/apis/metal"
+	"github.com/ironcore-dev/gardener-extension-provider-metal/pkg/metal"
 )
 
 // ValidateControlPlaneConfig validates a ControlPlaneConfig object.
