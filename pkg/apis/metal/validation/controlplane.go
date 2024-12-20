@@ -5,6 +5,7 @@ package validation
 
 import (
 	featurevalidation "github.com/gardener/gardener/pkg/utils/validation/features"
+	"github.com/ironcore-dev/gardener-extension-provider-metal/pkg/metal"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 
 	apismetal "github.com/ironcore-dev/gardener-extension-provider-metal/pkg/apis/metal"
@@ -15,7 +16,7 @@ func ValidateControlPlaneConfig(controlPlaneConfig *apismetal.ControlPlaneConfig
 	allErrs := field.ErrorList{}
 
 	if controlPlaneConfig.CloudControllerManager != nil {
-		allErrs = append(allErrs, featurevalidation.ValidateFeatureGates(controlPlaneConfig.CloudControllerManager.FeatureGates, version, fldPath.Child("cloudControllerManager", "featureGates"))...)
+		allErrs = append(allErrs, featurevalidation.ValidateFeatureGates(controlPlaneConfig.CloudControllerManager.FeatureGates, version, fldPath.Child("cloudControllerManager", metal.CloudControllerManagerFeatureGatesKeyName))...)
 	}
 
 	// TODO add validation for IPs

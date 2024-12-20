@@ -90,9 +90,9 @@ var _ = Describe("Valueprovider Reconcile", func() {
 			cloudProviderConfig := map[string]any{}
 			Expect(yaml.Unmarshal([]byte(config.Data["cloudprovider.conf"]), &cloudProviderConfig)).NotTo(HaveOccurred())
 			Expect(cloudProviderConfig["clusterName"]).To(Equal(cluster.Name))
-			networkingConfig, ok := cloudProviderConfig["networking"].(map[string]any)
+			networkingConfig, ok := cloudProviderConfig[metal.CloudControllerManagerNetworkingKeyName].(map[string]any)
 			Expect(ok).To(BeTrue())
-			Expect(networkingConfig["configureNodeAddresses"]).To(BeTrue())
+			Expect(networkingConfig[metal.CloudControllerManagerNodeAddressesConfigKeyName]).To(BeTrue())
 		})
 	})
 
@@ -212,7 +212,7 @@ var _ = Describe("Valueprovider Reconcile", func() {
 					"secrets": map[string]any{
 						"server": "cloud-controller-manager-server",
 					},
-					"featureGates": map[string]bool{
+					metal.CloudControllerManagerFeatureGatesKeyName: map[string]bool{
 						"CustomResourceValidation": true,
 					},
 					"podNetwork":           "10.0.0.0/16",
@@ -333,11 +333,11 @@ var _ = Describe("Valueprovider Reconcile", func() {
 					"secrets": map[string]any{
 						"server": "cloud-controller-manager-server",
 					},
-					"featureGates": map[string]bool{
+					metal.CloudControllerManagerFeatureGatesKeyName: map[string]bool{
 						"CustomResourceValidation": true,
 					},
-					"networking": map[string]any{
-						"configureNodeAddresses": false,
+					metal.CloudControllerManagerNetworkingKeyName: map[string]any{
+						metal.CloudControllerManagerNodeAddressesConfigKeyName: false,
 					},
 					"podNetwork":           "10.0.0.0/16",
 					"configureCloudRoutes": true,
