@@ -35,10 +35,9 @@ func (a *actuator) Reconcile(ctx context.Context, log logr.Logger, infra *extens
 			}
 			newNodes = append(newNodes, network.CIDR)
 		}
-	}
-
-	if !slices.Equal(infra.Status.Networking.Nodes, newNodes) {
-		infra.Status.Networking.Nodes = newNodes
+		if !slices.Equal(infra.Status.Networking.Nodes, newNodes) {
+			infra.Status.Networking.Nodes = newNodes
+		}
 	}
 
 	return a.reconcile(ctx, log, infra, cluster)
