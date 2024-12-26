@@ -87,6 +87,10 @@ var _ = Describe("Machines", func() {
 				},
 				metal.IgnitionFieldName:         yamlString,
 				metal.IgnitionOverrideFieldName: true,
+				metal.MetaDataFieldName: map[string]any{
+					"foo": "bar",
+					"baz": "100",
+				},
 			}
 
 			Eventually(Object(machineClass)).Should(SatisfyAll(
