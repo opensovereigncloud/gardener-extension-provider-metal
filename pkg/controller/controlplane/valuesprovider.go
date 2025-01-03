@@ -169,10 +169,13 @@ func (vp *valuesProvider) GetConfigChartValues(
 	cp *extensionsv1alpha1.ControlPlane,
 	cluster *extensionscontroller.Cluster,
 ) (map[string]any, error) {
-	// Collect config chart values
-	return map[string]any{
-		metal.ClusterFieldName: cluster.ObjectMeta.Name,
-	}, nil
+	cpConfig := &apismetal.ControlPlaneConfig{}
+	if cp.Spec.ProviderConfig != nil {
+		if _, _, err := vp.decoder.Decode(cp.Spec.ProviderConfig.Raw, nil, cpConfig); err != nil {
+			return nil, fmt.Errorf("could not decode providerConfig of controlplane '%s': %w", client.ObjectKeyFromObject(cp), err)
+		}
+	}
+	return vp.getConfigChartValues(cluster, cpConfig)
 }
 
 // GetControlPlaneChartValues returns the values for the control plane chart applied by the generic actuator.
@@ -301,11 +304,6 @@ func getCCMChartValues(
 
 	if cpConfig.CloudControllerManager != nil {
 		values[metal.CloudControllerManagerFeatureGatesKeyName] = cpConfig.CloudControllerManager.FeatureGates
-		if cpConfig.CloudControllerManager.Networking != nil {
-			values[metal.CloudControllerManagerNetworkingKeyName] = map[string]any{
-				metal.CloudControllerManagerNodeAddressesConfigKeyName: cpConfig.CloudControllerManager.Networking.ConfigureNodeAddresses,
-			}
-		}
 	}
 
 	overlayEnabled, err := isOverlayEnabled(cluster.Shoot.Spec.Networking)
@@ -364,6 +362,22 @@ func (vp *valuesProvider) getControlPlaneShootChartValues(cluster *extensionscon
 		metal.MetallbName:                metallb,
 		metal.CalicoBgpName:              calicoBgp,
 	}, nil
+}
+
+// getConfigChartValues collects and returns the config chart values.
+func (vp *valuesProvider) getConfigChartValues(cluster *extensionscontroller.Cluster, cpConfig *apismetal.ControlPlaneConfig) (map[string]any, error) {
+	values := map[string]any{
+		metal.ClusterFieldName: cluster.ObjectMeta.Name,
+	}
+
+	if cpConfig.CloudControllerManager != nil {
+		if cpConfig.CloudControllerManager.Networking != nil {
+			values[metal.CloudControllerManagerNetworkingKeyName] = map[string]any{
+				metal.CloudControllerManagerNodeAddressesConfigKeyName: cpConfig.CloudControllerManager.Networking.ConfigureNodeAddresses,
+			}
+		}
+	}
+	return values, nil
 }
 
 // getMetallbChartValues collects and returns the MetalLB chart values.
