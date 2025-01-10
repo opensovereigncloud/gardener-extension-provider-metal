@@ -9,6 +9,7 @@ import (
 
 	"github.com/gardener/gardener/extensions/pkg/controller"
 	gardencorev1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
+	v1beta1constants "github.com/gardener/gardener/pkg/apis/core/v1beta1/constants"
 	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
 	secretsmanager "github.com/gardener/gardener/pkg/utils/secrets/manager"
 	fakesecretsmanager "github.com/gardener/gardener/pkg/utils/secrets/manager/fake"
@@ -229,7 +230,8 @@ var _ = Describe("Valueprovider Reconcile", func() {
 			}
 
 			checksums := map[string]string{
-				metal.CloudProviderConfigName: "8bafb35ff1ac60275d62e1cbd495aceb511fb354f74a20f7d06ecb48b3a68432",
+				metal.CloudProviderConfigName:            "8bafb35ff1ac60275d62e1cbd495aceb511fb354f74a20f7d06ecb48b3a68432",
+				v1beta1constants.SecretNameCloudProvider: "abc",
 			}
 			values, err := vp.GetControlPlaneChartValues(ctx, cp, cluster, fakeSecretsManager, checksums, false)
 			Expect(err).NotTo(HaveOccurred())
@@ -242,7 +244,8 @@ var _ = Describe("Valueprovider Reconcile", func() {
 					"replicas":    1,
 					"clusterName": ns.Name,
 					"podAnnotations": map[string]any{
-						"checksum/secret-cloud-provider-config": "8bafb35ff1ac60275d62e1cbd495aceb511fb354f74a20f7d06ecb48b3a68432",
+						"checksum/config-cloud-provider-config": "8bafb35ff1ac60275d62e1cbd495aceb511fb354f74a20f7d06ecb48b3a68432",
+						"checksum/secret-cloudprovider":         "abc",
 					},
 					"podLabels": map[string]any{
 						"maintenance.gardener.cloud/restart": "true",
