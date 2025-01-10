@@ -293,7 +293,8 @@ func getCCMChartValues(
 		"clusterName": cp.Namespace,
 		"podNetwork":  strings.Join(extensionscontroller.GetPodNetwork(cluster), ","),
 		"podAnnotations": map[string]any{
-			"checksum/secret-" + internal.CloudProviderConfigMapName: checksums[internal.CloudProviderConfigMapName],
+			"checksum/config-" + internal.CloudProviderConfigMapName:      checksums[internal.CloudProviderConfigMapName],
+			"checksum/secret-" + v1beta1constants.SecretNameCloudProvider: checksums[v1beta1constants.SecretNameCloudProvider],
 		},
 		"podLabels":       podLabels,
 		"tlsCipherSuites": kutil.TLSCipherSuites,
