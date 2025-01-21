@@ -63,7 +63,7 @@ func (e *ensurer) EnsureMachineControllerManagerDeployment(ctx context.Context, 
 		machinecontrollermanager.ProviderSidecarContainer(newObj.Namespace, metal.ProviderName, image.String()),
 	)
 
-	if c := extensionswebhook.ContainerWithName(ps.Containers, "machine-controller-manager-provider-metal"); c != nil {
+	if c := extensionswebhook.ContainerWithName(ps.Containers, metal.MachineControllerManagerProviderIroncoreImageName); c != nil {
 		ensureMCMCommandLineArgs(c)
 		c.VolumeMounts = extensionswebhook.EnsureVolumeMountWithName(c.VolumeMounts, corev1.VolumeMount{
 			Name:      "cloudprovider",

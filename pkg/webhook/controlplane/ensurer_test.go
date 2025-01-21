@@ -249,7 +249,7 @@ var _ = Describe("Ensurer", func() {
 			BeforeEach(func() {
 				ensurer = NewEnsurer(logger, true)
 				DeferCleanup(testutils.WithVar(&ImageVector, imagevectorutils.ImageVector{{
-					Name:       "machine-controller-manager-provider-metal",
+					Name:       "machine-controller-manager-provider-ironcore-metal",
 					Repository: ptr.To("foo"),
 					Tag:        ptr.To[string]("bar"),
 				}}))
@@ -260,7 +260,7 @@ var _ = Describe("Ensurer", func() {
 				Expect(ensurer.EnsureMachineControllerManagerDeployment(ctx, eContextK8s, deployment, nil)).To(Succeed())
 				Expect(deployment.Spec.Template.Labels).To(HaveKeyWithValue(metal.AllowEgressToIstioIngressLabel, "allowed"))
 				Expect(deployment.Spec.Template.Spec.Containers).To(ConsistOf(corev1.Container{
-					Name:            "machine-controller-manager-provider-metal",
+					Name:            "machine-controller-manager-provider-ironcore-metal",
 					Image:           "foo:bar",
 					ImagePullPolicy: corev1.PullIfNotPresent,
 					Args: []string{
