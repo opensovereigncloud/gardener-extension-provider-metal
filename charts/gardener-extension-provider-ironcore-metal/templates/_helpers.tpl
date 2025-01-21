@@ -1,5 +1,5 @@
 {{- define "name" -}}
-gardener-extension-admission-metal
+gardener-extension-provider-ironcore-metal
 {{- end -}}
 
 {{- define "labels.app.key" -}}
@@ -15,13 +15,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{-  define "image" -}}
-  {{- if hasPrefix "sha256:" .tag }}
-  {{- printf "%s@%s" .repository .tag }}
+  {{- if hasPrefix "sha256:" .Values.image.tag }}
+  {{- printf "%s@%s" .Values.image.repository .Values.image.tag }}
   {{- else }}
-  {{- printf "%s:%s" .repository .tag }}
+  {{- printf "%s:%s" .Values.image.repository .Values.image.tag }}
   {{- end }}
 {{- end }}
-
-{{- define "leaderelectionid" -}}
-gardener-extension-admission-metal
-{{- end -}}
