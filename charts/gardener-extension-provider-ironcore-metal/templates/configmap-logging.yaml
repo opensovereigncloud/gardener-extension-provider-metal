@@ -23,7 +23,7 @@ data:
 
     [FILTER]
         Name                parser
-        Match               kubernetes.*machine-controller-manager*machine-controller-manager-provider-metal*
+        Match               kubernetes.*machine-controller-manager*machine-controller-manager-provider-ironcore-metal*
         Key_Name            log
         Parser              kubeapiserverParser
         Reserve_Data        True

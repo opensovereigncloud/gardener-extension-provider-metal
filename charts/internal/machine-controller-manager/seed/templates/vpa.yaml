@@ -13,7 +13,7 @@ spec:
     updateMode: {{ .Values.vpa.updatePolicy.updateMode | quote }}
   resourcePolicy:
     containerPolicies:
-    - containerName: machine-controller-manager-provider-metal
+    - containerName: machine-controller-manager-provider-ironcore-metal
       minAllowed:
         cpu: {{ .Values.resources.mcmProviderMetal.requests.cpu }}
         memory: {{ .Values.resources.mcmProviderMetal.requests.memory }}
