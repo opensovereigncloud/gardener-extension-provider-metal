@@ -20,8 +20,8 @@ import (
 	vpaautoscalingv1 "k8s.io/autoscaler/vertical-pod-autoscaler/pkg/apis/autoscaling.k8s.io/v1"
 	kubeletconfigv1beta1 "k8s.io/kubelet/config/v1beta1"
 
-	"github.com/ironcore-dev/gardener-extension-provider-metal/imagevector"
-	"github.com/ironcore-dev/gardener-extension-provider-metal/pkg/metal"
+	"github.com/ironcore-dev/gardener-extension-provider-ironcore-metal/imagevector"
+	"github.com/ironcore-dev/gardener-extension-provider-ironcore-metal/pkg/metal"
 )
 
 // NewEnsurer creates a new controlplane ensurer.
@@ -63,7 +63,7 @@ func (e *ensurer) EnsureMachineControllerManagerDeployment(ctx context.Context, 
 		machinecontrollermanager.ProviderSidecarContainer(newObj.Namespace, metal.ProviderName, image.String()),
 	)
 
-	if c := extensionswebhook.ContainerWithName(ps.Containers, "machine-controller-manager-provider-metal"); c != nil {
+	if c := extensionswebhook.ContainerWithName(ps.Containers, metal.MachineControllerManagerProviderIroncoreImageName); c != nil {
 		ensureMCMCommandLineArgs(c)
 		c.VolumeMounts = extensionswebhook.EnsureVolumeMountWithName(c.VolumeMounts, corev1.VolumeMount{
 			Name:      "cloudprovider",

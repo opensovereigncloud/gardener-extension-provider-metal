@@ -25,25 +25,25 @@ ARG TARGETARCH
 # Build
 RUN --mount=type=cache,target=/root/.cache/go-build \
     --mount=type=cache,target=/go/pkg \
-    CGO_ENABLED=0 GOOS=linux GOARCH=${GOARCH} go build -a -o gardener-extension-provider-metal ./cmd/gardener-extension-provider-metal/main.go && \
-    CGO_ENABLED=0 GOOS=linux GOARCH=${GOARCH} go build -a -o gardener-extension-admission-metal ./cmd/gardener-extension-admission-metal/main.go
+    CGO_ENABLED=0 GOOS=linux GOARCH=${GOARCH} go build -a -o gardener-extension-provider-ironcore-metal ./cmd/gardener-extension-provider-metal/main.go && \
+    CGO_ENABLED=0 GOOS=linux GOARCH=${GOARCH} go build -a -o gardener-extension-admission-ironcore-metal ./cmd/gardener-extension-admission-metal/main.go
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
-FROM gcr.io/distroless/static:nonroot AS gardener-extension-provider-metal
-LABEL source_repository="https://github.com/ironcore-dev/gardener-extension-provider-metal"
+FROM gcr.io/distroless/static:nonroot AS gardener-extension-provider-ironcore-metal
+LABEL source_repository="https://github.com/ironcore-dev/gardener-extension-provider-ironcore-metal"
 WORKDIR /
 COPY charts /charts
-COPY --from=builder /workspace/gardener-extension-provider-metal /gardener-extension-provider-metal
+COPY --from=builder /workspace/gardener-extension-provider-ironcore-metal /gardener-extension-provider-ironcore-metal
 USER 65532:65532
 
-ENTRYPOINT ["/gardener-extension-provider-metal"]
+ENTRYPOINT ["/gardener-extension-provider-ironcore-metal"]
 
-FROM gcr.io/distroless/static:nonroot AS gardener-extension-admission-metal
-LABEL source_repository="https://github.com/ironcore-dev/gardener-extension-provider-metal"
+FROM gcr.io/distroless/static:nonroot AS gardener-extension-admission-ironcore-metal
+LABEL source_repository="https://github.com/ironcore-dev/gardener-extension-provider-ironcore-metal"
 WORKDIR /
 COPY charts /charts
-COPY --from=builder /workspace/gardener-extension-admission-metal /gardener-extension-admission-metal
+COPY --from=builder /workspace/gardener-extension-admission-ironcore-metal /gardener-extension-admission-ironcore-metal
 USER 65532:65532
 
-ENTRYPOINT ["/gardener-extension-admission-metal"]
+ENTRYPOINT ["/gardener-extension-admission-ironcore-metal"]

@@ -27,17 +27,17 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 
-	admissioncmd "github.com/ironcore-dev/gardener-extension-provider-metal/pkg/admission/cmd"
-	metalinstall "github.com/ironcore-dev/gardener-extension-provider-metal/pkg/apis/metal/install"
-	providermetal "github.com/ironcore-dev/gardener-extension-provider-metal/pkg/metal"
+	admissioncmd "github.com/ironcore-dev/gardener-extension-provider-ironcore-metal/pkg/admission/cmd"
+	metalinstall "github.com/ironcore-dev/gardener-extension-provider-ironcore-metal/pkg/apis/metal/install"
+	providermetal "github.com/ironcore-dev/gardener-extension-provider-ironcore-metal/pkg/metal"
 )
 
 // AdmissionName is the name of the admission component.
-const AdmissionName = "admission-metal"
+const AdmissionName = "admission-ironcore-metal"
 
-var log = logf.Log.WithName("gardener-extension-admission-metal")
+var log = logf.Log.WithName("gardener-extension-admission-ironcore-metal")
 
-// NewAdmissionCommand creates a new command for running an ironcore gardener-extension-admission-metal webhook.
+// NewAdmissionCommand creates a new command for running an ironcore gardener-extension-admission-ironcore-metal webhook.
 func NewAdmissionCommand(ctx context.Context) *cobra.Command {
 	var (
 		restOpts = &controllercmd.RESTOptions{}

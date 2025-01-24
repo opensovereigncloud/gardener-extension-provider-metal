@@ -10,14 +10,14 @@ import (
 
 const (
 	// ProviderName is the name of the metal provider.
-	ProviderName = "provider-metal"
+	ProviderName = "provider-ironcore-metal"
 
 	// CloudControllerManagerImageName is the name of the cloud-controller-manager image.
 	CloudControllerManagerImageName = "cloud-controller-manager"
 	// MachineControllerManagerImageName is the name of the MachineControllerManager image.
 	MachineControllerManagerImageName = "machine-controller-manager"
 	// MachineControllerManagerProviderIroncoreImageName is the name of the MachineController metal image.
-	MachineControllerManagerProviderIroncoreImageName = "machine-controller-manager-provider-metal"
+	MachineControllerManagerProviderIroncoreImageName = "machine-controller-manager-provider-ironcore-metal"
 	// MetallbSpeakerImageName is the name of the metallb speaker to deploy to the shoot.
 	MetallbSpeakerImageName = "metallb-speaker"
 	// MetallbControllerImageName is the name of the metallb controller to deploy to the shoot.

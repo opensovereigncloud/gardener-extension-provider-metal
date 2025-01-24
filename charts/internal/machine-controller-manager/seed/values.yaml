@@ -1,6 +1,6 @@
 images:
   machine-controller-manager: image-repository:image-tag
-  machine-controller-manager-provider-metal: image-repository:image-tag
+  machine-controller-manager-provider-ironcore-metal: image-repository:image-tag
 
 replicas: 1
 

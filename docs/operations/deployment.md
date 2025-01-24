@@ -4,7 +4,7 @@
 contains some configuration specifics regarding the installation of different components via the helm charts residing 
 in the metal provider extension [repository](https://github.com/gardener/gardener-extension-provider-metal).
 
-## gardener-extension-admission-metal
+## gardener-extension-admission-ironcore-metal
 
 ### Authentication against the Garden cluster
 
@@ -13,7 +13,7 @@ There are several authentication possibilities depending on whether [the concept
 #### *Virtual Garden* is not used, i.e., the `runtime` Garden cluster is also the `target` Garden cluster.
 
 **Automounted Service Account Token**
-The easiest way to deploy the `gardener-extension-admission-metal` component will be to not provide `kubeconfig` at 
+The easiest way to deploy the `gardener-extension-admission-ironcore-metal` component will be to not provide `kubeconfig` at 
 all. This way in-cluster configuration and an automounted service account token will be used. The drawback of this 
 approach is that the automounted token will not be automatically rotated.
 

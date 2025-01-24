@@ -38,8 +38,8 @@ spec:
       serviceAccountName: machine-controller-manager
       terminationGracePeriodSeconds: 5
       containers:
-      - name: machine-controller-manager-provider-metal
-        image: {{ index .Values.images "machine-controller-manager-provider-metal" }}
+      - name: machine-controller-manager-provider-ironcore-metal
+        image: {{ index .Values.images "machine-controller-manager-provider-ironcore-metal" }}
         imagePullPolicy: IfNotPresent
         command:
         - ./machine-controller
