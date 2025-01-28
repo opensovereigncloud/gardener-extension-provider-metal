@@ -35,6 +35,9 @@ func (a *actuator) Reconcile(ctx context.Context, log logr.Logger, infra *extens
 			}
 			newNodes = append(newNodes, network.CIDR)
 		}
+		if infra.Status.Networking == nil {
+			infra.Status.Networking = &extensionsv1alpha1.InfrastructureStatusNetworking{}
+		}
 		if !slices.Equal(infra.Status.Networking.Nodes, newNodes) {
 			infra.Status.Networking.Nodes = newNodes
 		}
