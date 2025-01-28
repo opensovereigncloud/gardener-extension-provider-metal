@@ -19,6 +19,12 @@ type WorkerConfig struct {
 	// ExtraServerLabels is a map of additional labels that are applied to the ServerClaim for Server selection.
 	// +optional
 	ExtraServerLabels map[string]string `json:"extraServerLabels,omitempty"`
+	// IPAMConfig is a list of references to Network resources that should be used to assign IP addresses to the worker nodes.
+	// +optional
+	IPAMConfig []IPAMConfig `json:"ipamConfig,omitempty"`
+	// Metadata is a key-value map of additional data which should be passed to the Machine.
+	// +optional
+	Metadata map[string]string `json:"metadata,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -63,4 +69,22 @@ type IgnitionConfig struct {
 	// by extra ignition.
 	// +optional
 	Override bool `json:"override,omitempty"`
+}
+
+// IPAMObjectReference is a reference to the IPAM object, which will be used for IP allocation.
+type IPAMObjectReference struct {
+	// Name is the name of resource being referenced.
+	Name string `json:"name"`
+	// APIGroup is the group for the resource being referenced.
+	APIGroup string `json:"apiGroup"`
+	// Kind is the type of resource being referenced.
+	Kind string `json:"kind"`
+}
+
+// IPAMConfig is a reference to an IPAM resource.
+type IPAMConfig struct {
+	// MetadataKey is the name of metadata key for the network.
+	MetadataKey string `json:"metadataKey"`
+	// IPAMRef is a reference to the IPAM object, which will be used for IP allocation.
+	IPAMRef *IPAMObjectReference `json:"ipamRef"`
 }
