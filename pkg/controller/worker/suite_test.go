@@ -284,7 +284,7 @@ func SetupTest() (*corev1.Namespace, *gardener.ChartApplier) {
 		testCluster = &extensionscontroller.Cluster{
 			CloudProfile: &gardencorev1beta1.CloudProfile{
 				ObjectMeta: metav1.ObjectMeta{
-					Name: "metal",
+					Name: "ironcore-metal",
 				},
 				Spec: gardencorev1beta1.CloudProfileSpec{
 					ProviderConfig: &apiruntime.RawExtension{

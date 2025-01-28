@@ -102,7 +102,7 @@ var _ = Describe("Machines", func() {
 					Namespace: ns.Name,
 					Name:      className,
 				}),
-				HaveField("Provider", "metal"),
+				HaveField("Provider", "ironcore-metal"),
 				HaveField("NodeTemplate", &machinecontrollerv1alpha1.NodeTemplate{
 					Capacity:     pool.NodeTemplate.Capacity,
 					InstanceType: pool.MachineType,

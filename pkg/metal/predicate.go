@@ -4,4 +4,4 @@
 package metal
 
 // Type is the type of resources managed by the metal actuator.
-const Type = "metal"
+const Type = "ironcore-metal"
