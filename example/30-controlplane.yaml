@@ -56,7 +56,7 @@ spec:
     name: cloudprovider
     namespace: shoot--foobar--metal
   providerConfig:
-    apiVersion: metal.provider.extensions.gardener.cloud/v1alpha1
+    apiVersion: ironcore-metal.provider.extensions.gardener.cloud/v1alpha1
     kind: ControlPlaneConfig
     cloudControllerManager:
       featureGates:
@@ -75,7 +75,7 @@ spec:
             - peerIP: 1.2.3.5
               asNumber: 64512
   infrastructureProviderStatus:
-    apiVersion: metal.provider.extensions.gardener.cloud/v1alpha1
+    apiVersion: ironcore-metal.provider.extensions.gardener.cloud/v1alpha1
     kind: InfrastructureStatus
     #networkRef: # (optional)
     #  name: my-network

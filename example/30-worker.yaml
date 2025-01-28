@@ -20,7 +20,7 @@ spec:
     kind: CloudProfile
     spec:
       providerConfig:
-        apiVersion: metal.provider.extensions.gardener.cloud/v1alpha1
+        apiVersion: ironcore-metal.provider.extensions.gardener.cloud/v1alpha1
         kind: CloudProfileConfig
         machineImages:
         - name: gardenlinux
@@ -57,7 +57,7 @@ spec:
     name: cloudprovider
     namespace: shoot--foobar--metal
   infrastructureProviderStatus:
-    apiVersion: metal.provider.extensions.gardener.cloud/v1alpha1
+    apiVersion: ironcore-metal.provider.extensions.gardener.cloud/v1alpha1
     kind: InfrastructureStatus
     networkRef:
       name: shoot--foobar--metal
@@ -94,7 +94,7 @@ spec:
     - my-machine-pool-a
     - my-machine-pool-b
     providerConfig:
-      apiVersion: metal.provider.extensions.gardener.cloud/v1alpha1
+      apiVersion: ironcore-metal.provider.extensions.gardener.cloud/v1alpha1
       kind: WorkerConfig
       extraIgnition:
         raw: "the-ignition"

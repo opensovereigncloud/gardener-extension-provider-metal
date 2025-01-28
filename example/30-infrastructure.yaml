@@ -49,5 +49,5 @@ spec:
     namespace: shoot--foobar--metal
     name: core-metal
   providerConfig:
-    apiVersion: metal.provider.extensions.gardener.cloud/v1alpha1
+    apiVersion: ironcore-metal.provider.extensions.gardener.cloud/v1alpha1
     kind: InfrastructureConfig
