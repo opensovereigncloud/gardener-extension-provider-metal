@@ -323,3 +323,7 @@ func mapToString(m map[string]interface{}) (string, error) {
 	}
 	return string(yamlData), nil
 }
+
+var _ = AfterSuite(func() {
+	Expect(testEnv.Stop()).To(Succeed())
+})
