@@ -36,32 +36,25 @@ var _ = Describe("Actuator Reconcile", func() {
 		ctx = context.TODO()
 		log = logr.Discard()
 
-		infra = &extensionsv1alpha1.Infrastructure{
-			Status: extensionsv1alpha1.InfrastructureStatus{
-				Networking: &extensionsv1alpha1.InfrastructureStatusNetworking{
-					Nodes: []string{},
-				},
-			},
-		}
-
 		infrastructureConfig := metalv1alpha1.InfrastructureConfig{
 			Networks: []metalv1alpha1.Networks{
 				{Name: "worker-network-1", CIDR: "10.10.10.0/24", ID: "1"},
 				{Name: "worker-network-2", CIDR: "10.10.20.0/24", ID: "2"},
 			},
 		}
-		infrastructureConfigRaw, _ := json.Marshal(infrastructureConfig)
+		infrastructureConfigRaw, err := json.Marshal(infrastructureConfig)
+		Expect(err).To(Succeed())
+
+		infra = &extensionsv1alpha1.Infrastructure{}
+		infra.Spec.ProviderConfig = &runtime.RawExtension{
+			Raw: infrastructureConfigRaw,
+		}
 
 		cluster = &extensionscontroller.Cluster{
 			Shoot: &gardencorev1beta1.Shoot{
 				Spec: gardencorev1beta1.ShootSpec{
 					Kubernetes: gardencorev1beta1.Kubernetes{
 						Version: shootVersion,
-					},
-					Provider: gardencorev1beta1.Provider{
-						InfrastructureConfig: &runtime.RawExtension{
-							Raw: infrastructureConfigRaw,
-						},
 					},
 				},
 			},

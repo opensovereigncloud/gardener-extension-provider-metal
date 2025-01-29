@@ -7,7 +7,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"slices"
 
 	"github.com/gardener/gardener/extensions/pkg/controller"
 	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
@@ -16,13 +15,10 @@ import (
 	metalv1alpha1 "github.com/ironcore-dev/gardener-extension-provider-ironcore-metal/pkg/apis/metal/v1alpha1"
 )
 
-var (
-	infrastructureConfig metalv1alpha1.InfrastructureConfig
-)
-
 // Reconcile implements infrastructure actuator reconciliation
 func (a *actuator) Reconcile(ctx context.Context, log logr.Logger, infra *extensionsv1alpha1.Infrastructure, cluster *controller.Cluster) error {
-	err := json.Unmarshal(cluster.Shoot.Spec.Provider.InfrastructureConfig.Raw, &infrastructureConfig)
+	var infrastructureConfig metalv1alpha1.InfrastructureConfig
+	err := json.Unmarshal(infra.Spec.ProviderConfig.Raw, &infrastructureConfig)
 	if err != nil {
 		return fmt.Errorf("failed to unmarshal infrastructure config: %w", err)
 	}
@@ -38,9 +34,7 @@ func (a *actuator) Reconcile(ctx context.Context, log logr.Logger, infra *extens
 		if infra.Status.Networking == nil {
 			infra.Status.Networking = &extensionsv1alpha1.InfrastructureStatusNetworking{}
 		}
-		if !slices.Equal(infra.Status.Networking.Nodes, newNodes) {
-			infra.Status.Networking.Nodes = newNodes
-		}
+		infra.Status.Networking.Nodes = newNodes
 	}
 
 	return a.reconcile(ctx, log, infra, cluster)
