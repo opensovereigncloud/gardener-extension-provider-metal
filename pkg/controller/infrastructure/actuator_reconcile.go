@@ -11,6 +11,7 @@ import (
 	"github.com/gardener/gardener/extensions/pkg/controller"
 	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
 	"github.com/go-logr/logr"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	metalv1alpha1 "github.com/ironcore-dev/gardener-extension-provider-ironcore-metal/pkg/apis/metal/v1alpha1"
 )
@@ -22,6 +23,8 @@ func (a *actuator) Reconcile(ctx context.Context, log logr.Logger, infra *extens
 	if err != nil {
 		return fmt.Errorf("failed to unmarshal infrastructure config: %w", err)
 	}
+
+	originalInfra := infra.DeepCopy()
 
 	var newNodes []string
 	if infrastructureConfig.Networks != nil {
@@ -35,6 +38,10 @@ func (a *actuator) Reconcile(ctx context.Context, log logr.Logger, infra *extens
 			infra.Status.Networking = &extensionsv1alpha1.InfrastructureStatusNetworking{}
 		}
 		infra.Status.Networking.Nodes = newNodes
+	}
+
+	if err := a.client.Status().Patch(ctx, infra, client.MergeFrom(originalInfra)); err != nil {
+		return fmt.Errorf("failed to patch infrastructure status: %w", err)
 	}
 
 	return a.reconcile(ctx, log, infra, cluster)

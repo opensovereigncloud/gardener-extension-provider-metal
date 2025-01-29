@@ -4,7 +4,6 @@
 package infrastructure
 
 import (
-	"context"
 	"encoding/json"
 
 	extensionscontroller "github.com/gardener/gardener/extensions/pkg/controller"
@@ -13,6 +12,7 @@ import (
 	"github.com/go-logr/logr"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 
 	metalv1alpha1 "github.com/ironcore-dev/gardener-extension-provider-ironcore-metal/pkg/apis/metal/v1alpha1"
@@ -25,15 +25,13 @@ var (
 
 var _ = Describe("Actuator Reconcile", func() {
 	var (
-		ctx     context.Context
 		log     logr.Logger
 		infra   *extensionsv1alpha1.Infrastructure
 		cluster *extensionscontroller.Cluster
 		act     *actuator
 	)
 
-	BeforeEach(func() {
-		ctx = context.TODO()
+	BeforeEach(func(ctx SpecContext) {
 		log = logr.Discard()
 
 		infrastructureConfig := metalv1alpha1.InfrastructureConfig{
@@ -46,9 +44,14 @@ var _ = Describe("Actuator Reconcile", func() {
 		Expect(err).To(Succeed())
 
 		infra = &extensionsv1alpha1.Infrastructure{}
+		infra.Name = "some-infra"
+		infra.Namespace = metav1.NamespaceDefault
 		infra.Spec.ProviderConfig = &runtime.RawExtension{
 			Raw: infrastructureConfigRaw,
 		}
+
+		Expect(k8sClient.Create(ctx, infra)).To(Succeed())
+		DeferCleanup(k8sClient.Delete, infra)
 
 		cluster = &extensionscontroller.Cluster{
 			Shoot: &gardencorev1beta1.Shoot{
@@ -60,11 +63,11 @@ var _ = Describe("Actuator Reconcile", func() {
 			},
 		}
 
-		act = &actuator{}
+		act = &actuator{client: k8sClient}
 	})
 
 	Describe("#Reconcile", func() {
-		It("should update infra.Status.Networking.Nodes", func() {
+		It("should update infra.Status.Networking.Nodes", func(ctx SpecContext) {
 			err := act.Reconcile(ctx, log, infra, cluster)
 			Expect(err).NotTo(HaveOccurred())
 
