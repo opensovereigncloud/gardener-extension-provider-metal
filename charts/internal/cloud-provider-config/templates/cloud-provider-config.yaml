@@ -8,3 +8,6 @@ data:
     clusterName: {{ .Values.clusterName }}
     networking:
       configureNodeAddresses: {{ .Values.networking.configureNodeAddresses }}
+      {{- if .Values.networking.ipamKind }}
+      ipamKind: {{ toYaml .Values.networking.ipamKind | nindent 8 }}
+      {{- end }}

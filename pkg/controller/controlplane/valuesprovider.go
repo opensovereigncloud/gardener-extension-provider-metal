@@ -376,6 +376,15 @@ func (vp *valuesProvider) getConfigChartValues(cluster *extensionscontroller.Clu
 			values[metal.CloudControllerManagerNetworkingKeyName] = map[string]any{
 				metal.CloudControllerManagerNodeAddressesConfigKeyName: cpConfig.CloudControllerManager.Networking.ConfigureNodeAddresses,
 			}
+			ipamKind := cpConfig.CloudControllerManager.Networking.IPAMKind
+			if ipamKind != nil {
+				values[metal.CloudControllerManagerNetworkingKeyName] = map[string]any{
+					metal.CloudControllerManagerNodeIPAMKindKeyName: map[string]any{
+						"apiGroup": ipamKind.APIGroup,
+						"kind":     ipamKind.Kind,
+					},
+				}
+			}
 		}
 	}
 	return values, nil

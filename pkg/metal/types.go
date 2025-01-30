@@ -66,6 +66,8 @@ const (
 	CloudControllerManagerNetworkingKeyName = "networking"
 	// CloudControllerManagerNodeAddressesConfigKeyName is the key name for the networking key in CCM configuration
 	CloudControllerManagerNodeAddressesConfigKeyName = "configureNodeAddresses"
+	// CloudControllerManagerNodeIPAMKindKeyName is the key name for the networking ipamKind key in CCM configuration
+	CloudControllerManagerNodeIPAMKindKeyName = "ipamKind"
 	// CalicoBgpName is a constant for the name of the Calico BGP deployed by the worker controller.
 	CalicoBgpName = "calico-bgp"
 	// MetallbName is a constant for the name of the MetalLB deployed by the worker controller.
