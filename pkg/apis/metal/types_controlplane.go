@@ -25,6 +25,16 @@ type ControlPlaneConfig struct {
 type CloudControllerNetworking struct {
 	// ConfigureNodeAddresses enables the configuration of node addresses.
 	ConfigureNodeAddresses bool
+	// IPAMKind enables the IPAM integration.
+	IPAMKind *IPAMKind
+}
+
+// IPAMKind specifiers the IPAM objects in-use.
+type IPAMKind struct {
+	// APIGroup is the resource group.
+	APIGroup string
+	// Kind is the resource type.
+	Kind string
 }
 
 // CloudControllerManagerConfig contains configuration settings for the cloud-controller-manager.

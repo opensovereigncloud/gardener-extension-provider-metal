@@ -147,6 +147,66 @@ var _ = Describe("Valueprovider Reconcile", func() {
 		})
 	})
 
+	Describe("#GetConfigChartValues", func() {
+		It("should return correct config chart values for ipamKind address config ", func(ctx SpecContext) {
+			cp := &extensionsv1alpha1.ControlPlane{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "control-plane",
+					Namespace: ns.Name,
+				},
+				Spec: extensionsv1alpha1.ControlPlaneSpec{
+					Region: "foo",
+					SecretRef: corev1.SecretReference{
+						Name:      "my-infra-creds",
+						Namespace: ns.Name,
+					},
+					DefaultSpec: extensionsv1alpha1.DefaultSpec{
+						Type: metal.Type,
+						ProviderConfig: &runtime.RawExtension{
+							Raw: encode(&apismetal.ControlPlaneConfig{
+								CloudControllerManager: &apismetal.CloudControllerManagerConfig{
+									FeatureGates: map[string]bool{
+										"CustomResourceValidation": true,
+									},
+									Networking: &apismetal.CloudControllerNetworking{
+										ConfigureNodeAddresses: true,
+										IPAMKind: &apismetal.IPAMKind{
+											APIGroup: "ag",
+											Kind:     "kind",
+										},
+									},
+								},
+							}),
+						},
+					},
+				},
+			}
+			Expect(k8sClient.Create(ctx, cp)).To(Succeed())
+
+			By("ensuring that the provider ConfigMap has been created")
+			config := &corev1.ConfigMap{
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace: ns.Name,
+					Name:      internal.CloudProviderConfigMapName,
+				},
+			}
+			Eventually(Get(config)).Should(Succeed())
+			Expect(config.Data).To(HaveKey("cloudprovider.conf"))
+			cloudProviderConfig := map[string]any{}
+			Expect(yaml.Unmarshal([]byte(config.Data["cloudprovider.conf"]), &cloudProviderConfig)).NotTo(HaveOccurred())
+			Expect(cloudProviderConfig["clusterName"]).To(Equal(cluster.Name))
+			networkingConfig, ok := cloudProviderConfig[metal.CloudControllerManagerNetworkingKeyName].(map[string]any)
+			Expect(ok).To(BeTrue())
+			Expect(networkingConfig[metal.CloudControllerManagerNodeAddressesConfigKeyName]).To(BeTrue())
+			ipamKind, ok := networkingConfig[metal.CloudControllerManagerNodeIPAMKindKeyName].(map[string]any)
+			Expect(ok).To(BeTrue())
+			Expect(ipamKind).To(SatisfyAll(
+				HaveKeyWithValue("apiGroup", "ag"),
+				HaveKeyWithValue("kind", "kind"),
+			))
+		})
+	})
+
 	Describe("#GetControlPlaneShootCRDsChartValues", func() {
 		It("should return correct config chart values", func(ctx SpecContext) {
 			values, err := vp.GetControlPlaneShootCRDsChartValues(ctx, nil, nil)
