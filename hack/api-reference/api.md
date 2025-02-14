@@ -146,6 +146,141 @@ LoadBalancerConfig
 </tr>
 </tbody>
 </table>
+<h3 id="ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.BGPFilter">BGPFilter
+</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.CalicoBgpConfig">CalicoBgpConfig</a>)
+</p>
+<p>
+<p>BGPFilter contains configuration for BGPFilter resource.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>name</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Name is the name of the BGPFilter resource.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>exportV4</code></br>
+<em>
+<a href="#ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.BGPFilterRule">
+[]BGPFilterRule
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>The ordered set of IPv4 BGPFilter rules acting on exporting routes to a peer.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>importV4</code></br>
+<em>
+<a href="#ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.BGPFilterRule">
+[]BGPFilterRule
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>The ordered set of IPv4 BGPFilter rules acting on importing routes from a peer.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>exportV6</code></br>
+<em>
+<a href="#ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.BGPFilterRule">
+[]BGPFilterRule
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>The ordered set of IPv6 BGPFilter rules acting on exporting routes to a peer.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>importV6</code></br>
+<em>
+<a href="#ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.BGPFilterRule">
+[]BGPFilterRule
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>The ordered set of IPv6 BGPFilter rules acting on importing routes from a peer.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.BGPFilterRule">BGPFilterRule
+</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.BGPFilter">BGPFilter</a>)
+</p>
+<p>
+<p>BGPFilterRule defines a BGP filter rule consisting a single CIDR block and a filter action for this CIDR.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>cidr</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<code>matchOperator</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<code>action</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.BgpPeer">BgpPeer
 </h3>
 <p>
@@ -195,6 +330,18 @@ string
 <td>
 <em>(Optional)</em>
 <p>NodeSelector is a key-value pair to select nodes that should have this peering.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>filters</code></br>
+<em>
+[]string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Filters contains the filters for the BGP peer.</p>
 </td>
 </tr>
 </tbody>
@@ -277,6 +424,20 @@ int
 <p>BGPPeer contains configuration for BGPPeer resource.</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>bgpFilter</code></br>
+<em>
+<a href="#ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.BGPFilter">
+[]BGPFilter
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>BGPFilter contains configuration for BGPFilter resource.</p>
+</td>
+</tr>
 </tbody>
 </table>
 <h3 id="ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.CloudControllerManagerConfig">CloudControllerManagerConfig
@@ -353,6 +514,20 @@ bool
 <p>ConfigureNodeAddresses enables the configuration of node addresses.</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>ipamKind</code></br>
+<em>
+<a href="#ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.IPAMKind">
+IPAMKind
+</a>
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>IPAMKind enables the IPAM integration.</p>
+</td>
+</tr>
 </tbody>
 </table>
 <h3 id="ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.IPAMConfig">IPAMConfig
@@ -394,6 +569,47 @@ IPAMObjectReference
 </td>
 <td>
 <p>IPAMRef is a reference to the IPAM object, which will be used for IP allocation.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.IPAMKind">IPAMKind
+</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.CloudControllerNetworking">CloudControllerNetworking</a>)
+</p>
+<p>
+<p>IPAMKind specifiers the IPAM objects in-use.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>apiGroup</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>APIGroup is the resource group.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>kind</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Kind is the resource type.</p>
 </td>
 </tr>
 </tbody>

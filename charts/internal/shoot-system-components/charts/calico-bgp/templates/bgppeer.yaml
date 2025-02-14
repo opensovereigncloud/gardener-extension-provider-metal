@@ -12,6 +12,10 @@ spec:
   nodeSelector: {{ $peer.nodeSelector }}
   {{- end }}
   peerIP: {{ $peer.peerIP }}
+  {{- if $peer.filters }}
+  filters:
+  {{- toYaml $filter.peer.filters | nindent 2 }}
+  {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

@@ -99,6 +99,10 @@ type CalicoBgpConfig struct {
 	// BGPPeer contains configuration for BGPPeer resource.
 	// +optional
 	BgpPeer []BgpPeer `json:"bgpPeer,omitempty"`
+
+	// BGPFilter contains configuration for BGPFilter resource.
+	// +optional
+	BGPFilter []BGPFilter `json:"bgpFilter,omitempty"`
 }
 
 // BgpPeer contains configuration for BGPPeer resource.
@@ -114,4 +118,41 @@ type BgpPeer struct {
 	// NodeSelector is a key-value pair to select nodes that should have this peering.
 	// +optional
 	NodeSelector string `json:"nodeSelector,omitempty"`
+
+	// Filters contains the filters for the BGP peer.
+	// +optional
+	Filters []string `json:"filters,omitempty"`
+}
+
+// BGPFilter contains configuration for BGPFilter resource.
+type BGPFilter struct {
+	// Name is the name of the BGPFilter resource.
+	Name string `json:"name"`
+
+	// The ordered set of IPv4 BGPFilter rules acting on exporting routes to a peer.
+	// +optional
+	ExportV4 []BGPFilterRule `json:"exportV4,omitempty"`
+
+	// The ordered set of IPv4 BGPFilter rules acting on importing routes from a peer.
+	// +optional
+	ImportV4 []BGPFilterRule `json:"importV4,omitempty"`
+
+	// The ordered set of IPv6 BGPFilter rules acting on exporting routes to a peer.
+	// +optional
+	ExportV6 []BGPFilterRule `json:"exportV6,omitempty"`
+
+	// The ordered set of IPv6 BGPFilter rules acting on importing routes from a peer.
+	// +optional
+	ImportV6 []BGPFilterRule `json:"importV6,omitempty"`
+}
+
+// BGPFilterRule defines a BGP filter rule consisting a single CIDR block and a filter action for this CIDR.
+type BGPFilterRule struct {
+	CIDR string `json:"cidr"`
+
+	// +kubebuilder:validation:Enum=Equal;NotEqual;In;NotIn
+	MatchOperator string `json:"matchOperator"`
+
+	// +kubebuilder:validation:Enum=Accept;Reject
+	Action string `json:"action"`
 }

@@ -83,6 +83,9 @@ type CalicoBgpConfig struct {
 
 	// BGPPeer contains configuration for BGPPeer resource.
 	BgpPeer []BgpPeer
+
+	// BGPFilter contains configuration for BGPFilter resource.
+	BGPFilter []BGPFilter
 }
 
 // BgpPeer contains configuration for BGPPeer resource.
@@ -95,4 +98,36 @@ type BgpPeer struct {
 
 	// NodeSelector is a key-value pair to select nodes that should have this peering.
 	NodeSelector string
+
+	// Filters contains the filters for the BGP peer.
+	Filters []string
+}
+
+// BGPFilter contains configuration for BGPFilter resource.
+type BGPFilter struct {
+	// Name is the name of the BGPFilter resource.
+	Name string
+
+	// The ordered set of IPv4 BGPFilter rules acting on exporting routes to a peer.
+	ExportV4 []BGPFilterRule
+
+	// The ordered set of IPv4 BGPFilter rules acting on importing routes from a peer.
+	ImportV4 []BGPFilterRule
+
+	// The ordered set of IPv6 BGPFilter rules acting on exporting routes to a peer.
+	ExportV6 []BGPFilterRule
+
+	// The ordered set of IPv6 BGPFilter rules acting on importing routes from a peer.
+	ImportV6 []BGPFilterRule
+}
+
+// BGPFilterRule defines a BGP filter rule consisting a single CIDR block and a filter action for this CIDR.
+type BGPFilterRule struct {
+	CIDR string
+
+	// +kubebuilder:validation:Enum=Equal;NotEqual;In;NotIn
+	MatchOperator string
+
+	// +kubebuilder:validation:Enum=Accept;Reject
+	Action string
 }

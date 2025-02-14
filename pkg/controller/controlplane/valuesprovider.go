@@ -134,6 +134,7 @@ var (
 					{Type: &corev1.Secret{}, Name: "metallb-webhook-cert"},
 					{Type: &corev1.Service{}, Name: "metallb-webhook-service"},
 					{Type: &corev1.ServiceAccount{}, Name: "metallb-controller"},
+
 					{Type: &corev1.ServiceAccount{}, Name: "metallb-speaker"},
 				},
 			},
@@ -434,6 +435,7 @@ func getCalicoBgpChartValues(
 
 	var serviceLbIPs, serviceExtIPs, serviceClusterIPs []string
 	var peers []map[string]any
+	var filters []map[string]any
 	if cpConfig.LoadBalancerConfig.CalicoBgpConfig != nil &&
 		*cluster.Shoot.Spec.Networking.Type == metal.ShootCalicoNetworkType {
 		if cpConfig.LoadBalancerConfig.CalicoBgpConfig.ServiceLoadBalancerIPs != nil {
@@ -463,27 +465,103 @@ func getCalicoBgpChartValues(
 			}
 		}
 
+		if cpConfig.LoadBalancerConfig.CalicoBgpConfig.BGPFilter != nil {
+			for _, bgpFilter := range cpConfig.LoadBalancerConfig.CalicoBgpConfig.BGPFilter {
+				var exportV4Filters, exportV6Filters, importV4Filters, importV6Filters []map[string]any
+				var err error
+
+				if bgpFilter.ExportV4 != nil {
+					exportV4Filters, err = processFilters(bgpFilter.ExportV4)
+					if err != nil {
+						return nil, err
+					}
+				}
+				if bgpFilter.ImportV4 != nil {
+					importV4Filters, err = processFilters(bgpFilter.ImportV4)
+					if err != nil {
+						return nil, err
+					}
+				}
+				if bgpFilter.ExportV6 != nil {
+					exportV6Filters, err = processFilters(bgpFilter.ExportV6)
+					if err != nil {
+						return nil, err
+					}
+				}
+				if bgpFilter.ImportV6 != nil {
+					importV6Filters, err = processFilters(bgpFilter.ImportV6)
+					if err != nil {
+						return nil, err
+					}
+				}
+
+				var filterMap = map[string]any{
+					"name": bgpFilter.Name,
+				}
+				if len(exportV4Filters) > 0 {
+					filterMap["exportV4"] = exportV4Filters
+				}
+				if len(importV4Filters) > 0 {
+					filterMap["importV4"] = importV4Filters
+				}
+				if len(exportV6Filters) > 0 {
+					filterMap["exportV6"] = exportV6Filters
+				}
+				if len(importV6Filters) > 0 {
+					filterMap["importV6"] = importV6Filters
+				}
+				filters = append(filters, filterMap)
+			}
+		}
+
 		if cpConfig.LoadBalancerConfig.CalicoBgpConfig.BgpPeer != nil {
 			for _, peer := range cpConfig.LoadBalancerConfig.CalicoBgpConfig.BgpPeer {
-				peers = append(peers, map[string]any{
+				peerMap := map[string]any{
 					"peerIP":       peer.PeerIP,
 					"asNumber":     peer.ASNumber,
 					"nodeSelector": peer.NodeSelector,
-				})
+				}
+				if len(peer.Filters) > 0 {
+					peerMap["filters"] = peer.Filters
+				}
+				peers = append(peers, peerMap)
 			}
 		}
 	}
+
+	bgpValues := map[string]any{
+		"enabled":                true,
+		"asNumber":               cpConfig.LoadBalancerConfig.CalicoBgpConfig.ASNumber,
+		"serviceLoadBalancerIPs": serviceLbIPs,
+		"serviceExternalIPs":     serviceExtIPs,
+		"serviceClusterIPs":      serviceClusterIPs,
+		"bgpPeer":                peers,
+	}
+
+	if len(filters) > 0 {
+		bgpValues["bgpFilter"] = filters
+	}
+
 	return map[string]any{
 		"enabled": true,
-		"bgp": map[string]any{
-			"enabled":                true,
-			"asNumber":               cpConfig.LoadBalancerConfig.CalicoBgpConfig.ASNumber,
-			"serviceLoadBalancerIPs": serviceLbIPs,
-			"serviceExternalIPs":     serviceExtIPs,
-			"serviceClusterIPs":      serviceClusterIPs,
-			"bgpPeer":                peers,
-		},
+		"bgp":     bgpValues,
 	}, nil
+}
+
+func processFilters(filtersConfig []apismetal.BGPFilterRule) ([]map[string]any, error) {
+	var filters []map[string]any
+	for _, filter := range filtersConfig {
+		if err := parseAddressPool(filter.CIDR); err != nil {
+			return nil, fmt.Errorf("invalid CIDR %q in pool: %w", filter.CIDR, err)
+		}
+		filterMap := map[string]any{
+			"cidr":          filter.CIDR,
+			"action":        filter.Action,
+			"matchOperator": filter.MatchOperator,
+		}
+		filters = append(filters, filterMap)
+	}
+	return filters, nil
 }
 
 func parseAddressPool(cidr string) error {
