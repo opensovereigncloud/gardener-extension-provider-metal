@@ -641,6 +641,213 @@ var _ = Describe("Valueprovider Reconcile", func() {
 			}))
 		})
 	})
+
+	Describe("#GetControlPlaneShootChartValues", func() {
+		It("should return correct shoot system chart values with calico bgp filters", func(ctx SpecContext) {
+			cp := &extensionsv1alpha1.ControlPlane{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "control-plane",
+					Namespace: ns.Name,
+				},
+				Spec: extensionsv1alpha1.ControlPlaneSpec{
+					Region: "foo",
+					SecretRef: corev1.SecretReference{
+						Name:      "my-infra-creds",
+						Namespace: ns.Name,
+					},
+					DefaultSpec: extensionsv1alpha1.DefaultSpec{
+						Type: metal.Type,
+						ProviderConfig: &runtime.RawExtension{
+							Raw: encode(&apismetal.ControlPlaneConfig{
+								CloudControllerManager: &apismetal.CloudControllerManagerConfig{
+									FeatureGates: map[string]bool{
+										"CustomResourceValidation": true,
+									},
+								},
+								LoadBalancerConfig: &apismetal.LoadBalancerConfig{
+									CalicoBgpConfig: &apismetal.CalicoBgpConfig{
+										ASNumber:               12345,
+										ServiceLoadBalancerIPs: []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},
+										ServiceClusterIPs:      []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},
+										ServiceExternalIPs:     []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},
+										BgpPeer: []apismetal.BgpPeer{
+											{
+												PeerIP:       "1.2.3.4",
+												ASNumber:     12345,
+												NodeSelector: "foo=bar",
+												Filters: []string{
+													"v4filter",
+												},
+											},
+											{
+												PeerIP:       "1.2.3.5",
+												ASNumber:     12345,
+												NodeSelector: "foo=bar",
+												Filters: []string{
+													"v6filter",
+												},
+											},
+										},
+										BGPFilter: []apismetal.BGPFilter{
+											{
+												Name: "v4filter",
+												ImportV4: []apismetal.BGPFilterRule{
+													{
+														CIDR:          "10.10.10.0/24",
+														Action:        "Deny",
+														MatchOperator: "Equal",
+													},
+												},
+												ExportV4: []apismetal.BGPFilterRule{
+													{
+														CIDR:          "10.10.20.0/24",
+														Action:        "Deny",
+														MatchOperator: "Equal",
+													},
+												},
+											},
+											{
+												Name: "v6filter",
+												ImportV6: []apismetal.BGPFilterRule{
+													{
+														CIDR:          "fd00:dead:beef:64:34::/80",
+														Action:        "Accept",
+														MatchOperator: "Equal",
+													},
+												},
+												ExportV6: []apismetal.BGPFilterRule{
+													{
+														CIDR:          "fd00:dead:beef:64:35::/80",
+														Action:        "Accept",
+														MatchOperator: "Equal",
+													},
+												},
+											},
+										},
+									},
+								},
+							}),
+						},
+					},
+				},
+			}
+			Expect(k8sClient.Create(ctx, cp)).To(Succeed())
+
+			providerCloudProfile := &apismetal.CloudProfileConfig{}
+			providerCloudProfileJson, err := json.Marshal(providerCloudProfile)
+			Expect(err).NotTo(HaveOccurred())
+			networkProviderConfig := &unstructured.Unstructured{Object: map[string]any{
+				"kind":       "FooNetworkConfig",
+				"apiVersion": "v1alpha1",
+				"overlay": map[string]any{
+					"enabled": false,
+				},
+			}}
+			networkProviderConfigData, err := runtime.Encode(unstructured.UnstructuredJSONScheme, networkProviderConfig)
+			Expect(err).NotTo(HaveOccurred())
+			cluster := &controller.Cluster{
+				CloudProfile: &gardencorev1beta1.CloudProfile{
+					Spec: gardencorev1beta1.CloudProfileSpec{
+						ProviderConfig: &runtime.RawExtension{
+							Raw: providerCloudProfileJson,
+						},
+					},
+				},
+				Shoot: &gardencorev1beta1.Shoot{
+					ObjectMeta: metav1.ObjectMeta{
+						Namespace: ns.Name,
+						Name:      "my-shoot",
+					},
+					Spec: gardencorev1beta1.ShootSpec{
+						Networking: &gardencorev1beta1.Networking{
+							Type:           ptr.To[string](metal.ShootCalicoNetworkType),
+							ProviderConfig: &runtime.RawExtension{Raw: networkProviderConfigData},
+							Pods:           ptr.To[string]("10.0.0.0/16"),
+						},
+						Kubernetes: gardencorev1beta1.Kubernetes{
+							Version: "1.26.0",
+							VerticalPodAutoscaler: &gardencorev1beta1.VerticalPodAutoscaler{
+								Enabled: true,
+							},
+						},
+					},
+				},
+			}
+
+			values, err := vp.GetControlPlaneShootChartValues(ctx, cp, cluster, fakeSecretsManager, nil)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(values).To(Equal(map[string]any{
+				"cloud-controller-manager": map[string]any{"enabled": true},
+				"metallb": map[string]any{
+					"enabled": false,
+				},
+				"calico-bgp": map[string]any{
+					"enabled": true,
+					"bgp": map[string]any{
+						"enabled":                true,
+						"asNumber":               12345,
+						"serviceLoadBalancerIPs": []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},
+						"serviceExternalIPs":     []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},
+						"serviceClusterIPs":      []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},
+						"bgpPeer": []map[string]any{
+							{
+								"peerIP":       "1.2.3.4",
+								"asNumber":     12345,
+								"nodeSelector": "foo=bar",
+								"filters": []string{
+									"v4filter",
+								},
+							},
+							{
+								"peerIP":       "1.2.3.5",
+								"asNumber":     12345,
+								"nodeSelector": "foo=bar",
+								"filters": []string{
+									"v6filter",
+								},
+							},
+						},
+						"bgpFilter": []map[string]any{
+							{
+								"name": "v4filter",
+								"importV4": []map[string]any{
+									{
+										"cidr":          "10.10.10.0/24",
+										"action":        "Deny",
+										"matchOperator": "Equal",
+									},
+								},
+								"exportV4": []map[string]any{
+									{
+										"cidr":          "10.10.20.0/24",
+										"action":        "Deny",
+										"matchOperator": "Equal",
+									},
+								},
+							},
+							{
+								"name": "v6filter",
+								"importV6": []map[string]any{
+									{
+										"cidr":          "fd00:dead:beef:64:34::/80",
+										"action":        "Accept",
+										"matchOperator": "Equal",
+									},
+								},
+								"exportV6": []map[string]any{
+									{
+										"cidr":          "fd00:dead:beef:64:35::/80",
+										"action":        "Accept",
+										"matchOperator": "Equal",
+									},
+								},
+							},
+						},
+					},
+				},
+			}))
+		})
+	})
 })
 
 func encode(obj runtime.Object) []byte {
