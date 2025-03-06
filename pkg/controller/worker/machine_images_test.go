@@ -34,7 +34,7 @@ var _ = Describe("MachinesImages", func() {
 
 		By("creating a worker delegate")
 		decoder := serializer.NewCodecFactory(k8sClient.Scheme(), serializer.EnableStrict).UniversalDecoder()
-		workerDelegate, err := NewWorkerDelegate(k8sClient, decoder, k8sClient.Scheme(), "", w, testCluster)
+		workerDelegate, err := NewWorkerDelegate(k8sClient, decoder, k8sClient.Scheme(), "", w, testCluster, k8sClient)
 		Expect(err).NotTo(HaveOccurred())
 
 		By("calling the updating machine image status")

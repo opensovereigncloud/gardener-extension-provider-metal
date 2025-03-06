@@ -69,6 +69,7 @@ func (d *delegateFactory) WorkerDelegate(_ context.Context, worker *extensionsv1
 		serverVersion.GitVersion,
 		worker,
 		cluster,
+		d.gardenReader,
 	)
 }
 
@@ -81,6 +82,7 @@ type workerDelegate struct {
 	cloudProfileConfig *api.CloudProfileConfig
 	cluster            *extensionscontroller.Cluster
 	worker             *extensionsv1alpha1.Worker
+	gardenReader       client.Reader
 }
 
 // NewWorkerDelegate creates a new context for a worker reconciliation.
@@ -91,6 +93,7 @@ func NewWorkerDelegate(
 	serverVersion string,
 	worker *extensionsv1alpha1.Worker,
 	cluster *extensionscontroller.Cluster,
+	gardenReader client.Reader,
 ) (
 	genericactuator.WorkerDelegate,
 	error,
@@ -108,5 +111,6 @@ func NewWorkerDelegate(
 		cloudProfileConfig: config,
 		cluster:            cluster,
 		worker:             worker,
+		gardenReader:       gardenReader,
 	}, nil
 }

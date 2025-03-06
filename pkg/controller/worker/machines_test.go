@@ -64,7 +64,7 @@ var _ = Describe("Machines", func() {
 			}
 			By("deploying the machine class for a given multi zone cluster")
 			decoder := serializer.NewCodecFactory(k8sClient.Scheme(), serializer.EnableStrict).UniversalDecoder()
-			workerDelegate, err = NewWorkerDelegate(k8sClient, decoder, k8sClient.Scheme(), "", w, testCluster)
+			workerDelegate, err = NewWorkerDelegate(k8sClient, decoder, k8sClient.Scheme(), "", w, testCluster, k8sClient)
 			Expect(err).NotTo(HaveOccurred())
 		})
 
@@ -134,7 +134,7 @@ var _ = Describe("Machines", func() {
 			className2      = fmt.Sprintf("%s-%s", deploymentName2, workerPoolHash)
 		)
 		decoder := serializer.NewCodecFactory(k8sClient.Scheme(), serializer.EnableStrict).UniversalDecoder()
-		workerDelegate, err := NewWorkerDelegate(k8sClient, decoder, k8sClient.Scheme(), "", w, testCluster)
+		workerDelegate, err := NewWorkerDelegate(k8sClient, decoder, k8sClient.Scheme(), "", w, testCluster, k8sClient)
 		Expect(err).NotTo(HaveOccurred())
 
 		By("generating the machine deployments")
