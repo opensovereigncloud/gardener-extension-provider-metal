@@ -84,6 +84,10 @@ type CalicoBgpConfig struct {
 	// +required
 	ASNumber int `json:"asNumber"`
 
+	// nodeToNodeMeshEnabled enables the node-to-node mesh.
+	// +optional
+	NodeToNodeMeshEnabled bool `json:"nodeToNodeMeshEnabled,omitempty"`
+
 	// ServiceLoadBalancerIPs are the CIDR blocks for Kubernetes Service LoadBalancer IPs.
 	// +optional
 	ServiceLoadBalancerIPs []string `json:"serviceLoadBalancerIPs,omitempty"`

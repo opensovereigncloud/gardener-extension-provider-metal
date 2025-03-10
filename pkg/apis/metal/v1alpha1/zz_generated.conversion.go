@@ -348,6 +348,7 @@ func Convert_metal_BgpPeer_To_v1alpha1_BgpPeer(in *metal.BgpPeer, out *BgpPeer, 
 
 func autoConvert_v1alpha1_CalicoBgpConfig_To_metal_CalicoBgpConfig(in *CalicoBgpConfig, out *metal.CalicoBgpConfig, s conversion.Scope) error {
 	out.ASNumber = in.ASNumber
+	out.NodeToNodeMeshEnabled = in.NodeToNodeMeshEnabled
 	out.ServiceLoadBalancerIPs = *(*[]string)(unsafe.Pointer(&in.ServiceLoadBalancerIPs))
 	out.ServiceExternalIPs = *(*[]string)(unsafe.Pointer(&in.ServiceExternalIPs))
 	out.ServiceClusterIPs = *(*[]string)(unsafe.Pointer(&in.ServiceClusterIPs))
@@ -363,6 +364,7 @@ func Convert_v1alpha1_CalicoBgpConfig_To_metal_CalicoBgpConfig(in *CalicoBgpConf
 
 func autoConvert_metal_CalicoBgpConfig_To_v1alpha1_CalicoBgpConfig(in *metal.CalicoBgpConfig, out *CalicoBgpConfig, s conversion.Scope) error {
 	out.ASNumber = in.ASNumber
+	out.NodeToNodeMeshEnabled = in.NodeToNodeMeshEnabled
 	out.ServiceLoadBalancerIPs = *(*[]string)(unsafe.Pointer(&in.ServiceLoadBalancerIPs))
 	out.ServiceExternalIPs = *(*[]string)(unsafe.Pointer(&in.ServiceExternalIPs))
 	out.ServiceClusterIPs = *(*[]string)(unsafe.Pointer(&in.ServiceClusterIPs))

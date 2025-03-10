@@ -376,6 +376,18 @@ int
 </tr>
 <tr>
 <td>
+<code>nodeToNodeMeshEnabled</code></br>
+<em>
+bool
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>nodeToNodeMeshEnabled enables the node-to-node mesh.</p>
+</td>
+</tr>
+<tr>
+<td>
 <code>serviceLoadBalancerIPs</code></br>
 <em>
 []string

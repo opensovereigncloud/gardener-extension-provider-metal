@@ -72,6 +72,9 @@ type CalicoBgpConfig struct {
 	// ASNumber is the default AS number used by a node.
 	ASNumber int
 
+	// nodeToNodeMeshEnabled enables the node-to-node mesh.
+	NodeToNodeMeshEnabled bool
+
 	// ServiceLoadBalancerIPs are the CIDR blocks for Kubernetes Service LoadBalancer IPs.
 	ServiceLoadBalancerIPs []string
 
