@@ -11,9 +11,9 @@ require (
 	github.com/gardener/machine-controller-manager v0.56.1
 	github.com/go-logr/logr v1.4.2
 	github.com/imdario/mergo v0.3.16
-	github.com/ironcore-dev/controller-utils v0.9.7
+	github.com/ironcore-dev/controller-utils v0.9.8
 	github.com/ironcore-dev/vgopath v0.1.7
-	github.com/onsi/ginkgo/v2 v2.22.2
+	github.com/onsi/ginkgo/v2 v2.23.0
 	github.com/onsi/gomega v1.36.2
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/pflag v1.0.6
