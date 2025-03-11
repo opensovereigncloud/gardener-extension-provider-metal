@@ -544,6 +544,7 @@ var _ = Describe("Valueprovider Reconcile", func() {
 								LoadBalancerConfig: &apismetal.LoadBalancerConfig{
 									CalicoBgpConfig: &apismetal.CalicoBgpConfig{
 										ASNumber:               12345,
+										NodeToNodeMeshEnabled:  true,
 										ServiceLoadBalancerIPs: []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},
 										ServiceClusterIPs:      []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},
 										ServiceExternalIPs:     []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},
@@ -621,6 +622,7 @@ var _ = Describe("Valueprovider Reconcile", func() {
 					"bgp": map[string]any{
 						"enabled":                true,
 						"asNumber":               12345,
+						"nodeToNodeMeshEnabled":  true,
 						"serviceLoadBalancerIPs": []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},
 						"serviceExternalIPs":     []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},
 						"serviceClusterIPs":      []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},
@@ -786,6 +788,7 @@ var _ = Describe("Valueprovider Reconcile", func() {
 					"bgp": map[string]any{
 						"enabled":                true,
 						"asNumber":               12345,
+						"nodeToNodeMeshEnabled":  false,
 						"serviceLoadBalancerIPs": []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},
 						"serviceExternalIPs":     []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},
 						"serviceClusterIPs":      []string{"10.10.10.0/24", "10.20.20.10-10.20.20.30"},

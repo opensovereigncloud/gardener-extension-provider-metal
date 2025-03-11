@@ -535,6 +535,7 @@ func getCalicoBgpChartValues(
 		"serviceLoadBalancerIPs": serviceLbIPs,
 		"serviceExternalIPs":     serviceExtIPs,
 		"serviceClusterIPs":      serviceClusterIPs,
+		"nodeToNodeMeshEnabled":  cpConfig.LoadBalancerConfig.CalicoBgpConfig.NodeToNodeMeshEnabled,
 		"bgpPeer":                peers,
 	}
 
