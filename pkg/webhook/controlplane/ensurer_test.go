@@ -82,7 +82,7 @@ var _ = Describe("Ensurer", func() {
 				APIVersion: v1alpha1.SchemeGroupVersion.String(),
 				Kind:       "ControlPlaneConfig",
 			},
-			HostnamePolicy: apismetal.HostnamePolicyServer,
+			HostnamePolicy: apismetal.NodeNamePolicyServerName,
 		}
 		controlPlaneConfigRaw, _  = json.Marshal(controlPlaneConfig)
 		eContextK8sServerHostName = gcontext.NewInternalGardenContext(
@@ -358,7 +358,7 @@ var _ = Describe("Ensurer", func() {
 			Expect(ensurer.EnsureMachineControllerManagerDeployment(ctx, eContextK8sServerHostName, deployment, nil)).To(Succeed())
 			Expect(deployment.Spec.Template.Spec.Containers).To(
 				ContainElement(
-					HaveField("Args", ContainElement("--use-server-name-as-node-name=true")),
+					HaveField("Args", ContainElement("--node-name-policy=ServerName")),
 				),
 			)
 		})
