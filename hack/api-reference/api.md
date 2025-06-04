@@ -146,15 +146,15 @@ LoadBalancerConfig
 </tr>
 <tr>
 <td>
-<code>hostnamePolicy</code></br>
+<code>nodeNamePolicy</code></br>
 <em>
-<a href="#ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.HostnamePolicy">
-HostnamePolicy
+<a href="#ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.NodeNamePolicy">
+NodeNamePolicy
 </a>
 </em>
 </td>
 <td>
-<p>HostnamePolicy is a policy for generating hostnames for the worker nodes.</p>
+<p>NodeNamePolicy is a policy for generating hostnames for the worker nodes.</p>
 </td>
 </tr>
 </tbody>
@@ -555,15 +555,6 @@ IPAMKind
 </tr>
 </tbody>
 </table>
-<h3 id="ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.HostnamePolicy">HostnamePolicy
-(<code>string</code> alias)</p></h3>
-<p>
-(<em>Appears on:</em>
-<a href="#ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.ControlPlaneConfig">ControlPlaneConfig</a>)
-</p>
-<p>
-<p>HostnamePolicy is a policy for generating hostnames for the worker nodes.</p>
-</p>
 <h3 id="ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.IPAMConfig">IPAMConfig
 </h3>
 <p>
@@ -1153,6 +1144,15 @@ string
 </tr>
 </tbody>
 </table>
+<h3 id="ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.NodeNamePolicy">NodeNamePolicy
+(<code>string</code> alias)</p></h3>
+<p>
+(<em>Appears on:</em>
+<a href="#ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.ControlPlaneConfig">ControlPlaneConfig</a>)
+</p>
+<p>
+<p>NodeNamePolicy is a policy for generating hostnames for the worker nodes.</p>
+</p>
 <h3 id="ironcore-metal.provider.extensions.gardener.cloud/v1alpha1.RegionConfig">RegionConfig
 </h3>
 <p>

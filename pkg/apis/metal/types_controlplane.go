@@ -20,8 +20,8 @@ type ControlPlaneConfig struct {
 	// LoadBalancerConfig contains configuration settings for the shoot loadbalancing.
 	LoadBalancerConfig *LoadBalancerConfig
 
-	// HostnamePolicy is a policy for generating hostnames for the worker nodes.
-	HostnamePolicy NodeNamePolicy
+	// NodeNamePolicy is a policy for generating hostnames for the worker nodes.
+	NodeNamePolicy NodeNamePolicy
 }
 
 // NodeNamePolicy is a policy for generating hostnames for the worker nodes.

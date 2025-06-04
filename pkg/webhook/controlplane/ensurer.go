@@ -160,7 +160,7 @@ func (e *ensurer) EnsureClusterAutoscalerDeployment(_ context.Context, _ extensi
 
 func ensureMCMCommandLineArgs(c *corev1.Container, cp *metalapi.ControlPlaneConfig) {
 	c.Args = extensionswebhook.EnsureStringWithPrefix(c.Args, "--metal-kubeconfig=", "/etc/metal/kubeconfig")
-	if cp.HostnamePolicy == metalapi.NodeNamePolicyServerName {
+	if cp.NodeNamePolicy == metalapi.NodeNamePolicyServerName {
 		c.Args = extensionswebhook.EnsureStringWithPrefix(c.Args, "--node-name-policy=", string(metalapi.NodeNamePolicyServerName))
 	}
 }

@@ -22,16 +22,16 @@ type ControlPlaneConfig struct {
 	// +optional
 	LoadBalancerConfig *LoadBalancerConfig `json:"loadBalancerConfig,omitempty"`
 
-	// HostnamePolicy is a policy for generating hostnames for the worker nodes.
-	HostnamePolicy HostnamePolicy `json:"hostnamePolicy,omitempty"`
+	// NodeNamePolicy is a policy for generating hostnames for the worker nodes.
+	NodeNamePolicy NodeNamePolicy `json:"nodeNamePolicy,omitempty"`
 }
 
-// HostnamePolicy is a policy for generating hostnames for the worker nodes.
-type HostnamePolicy string
+// NodeNamePolicy is a policy for generating hostnames for the worker nodes.
+type NodeNamePolicy string
 
 const (
-	// HostnamePolicyServer is a policy for generating hostnames based on the Server.
-	HostnamePolicyServer HostnamePolicy = "Server"
+	// NodeNamePolicyServerName is a policy for generating hostnames based on the Server.
+	NodeNamePolicyServerName NodeNamePolicy = "ServerName"
 )
 
 // CloudControllerNetworking contains configuration settings for CCM networking.

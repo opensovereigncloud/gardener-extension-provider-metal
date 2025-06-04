@@ -81,7 +81,7 @@ var _ = Describe("Ensurer", func() {
 				APIVersion: v1alpha1.SchemeGroupVersion.String(),
 				Kind:       "ControlPlaneConfig",
 			},
-			HostnamePolicy: apismetal.NodeNamePolicyServerName,
+			NodeNamePolicy: apismetal.NodeNamePolicyServerName,
 		}
 		controlPlaneConfigRaw, _  = json.Marshal(controlPlaneConfig)
 		eContextK8sServerHostName = gcontext.NewInternalGardenContext(
