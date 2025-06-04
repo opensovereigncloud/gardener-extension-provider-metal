@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'charts/gardener-extension-provider-ironcore-metal/**'
+  workflow_dispatch:
 
 jobs:
   helm-chart:
