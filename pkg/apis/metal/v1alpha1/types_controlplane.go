@@ -30,8 +30,12 @@ type ControlPlaneConfig struct {
 type NodeNamePolicy string
 
 const (
+	// NodeNamePolicyBMCName is a policy for generating hostnames based on the BMC.
+	NodeNamePolicyBMCName NodeNamePolicy = "BMCName"
 	// NodeNamePolicyServerName is a policy for generating hostnames based on the Server.
 	NodeNamePolicyServerName NodeNamePolicy = "ServerName"
+	// NodeNamePolicyServerClaimName is a policy for generating hostnames based on the ServerClaim.
+	NodeNamePolicyServerClaimName NodeNamePolicy = "ServerClaimName"
 )
 
 // CloudControllerNetworking contains configuration settings for CCM networking.
