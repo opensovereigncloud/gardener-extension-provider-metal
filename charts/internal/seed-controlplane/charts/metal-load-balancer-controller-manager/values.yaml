@@ -1,0 +1,2 @@
+nodeCIDRMask: 64
+allocateNodeCIDRs: false
