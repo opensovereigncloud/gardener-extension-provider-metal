@@ -14,6 +14,7 @@ import (
 	. "github.com/onsi/gomega"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/utils/ptr"
 
 	metalv1alpha1 "github.com/ironcore-dev/gardener-extension-provider-ironcore-metal/pkg/apis/metal/v1alpha1"
 )
@@ -59,6 +60,10 @@ var _ = Describe("Actuator Reconcile", func() {
 					Kubernetes: gardencorev1beta1.Kubernetes{
 						Version: shootVersion,
 					},
+					Networking: &gardencorev1beta1.Networking{
+						Pods:     ptr.To("100.12.12.0/8"),
+						Services: ptr.To("100.12.13/8"),
+					},
 				},
 			},
 		}
@@ -74,6 +79,15 @@ var _ = Describe("Actuator Reconcile", func() {
 			// Verify that infra.Status.Networking.Nodes is updated
 			expectedNodes := []string{"10.10.10.0/24", "10.10.20.0/24"}
 			Expect(infra.Status.Networking.Nodes).To(Equal(expectedNodes))
+		})
+
+		It("should copy the Pod and Service CIDRs from the Shoot spec to infra.Status.Networking", func(ctx SpecContext) {
+			err := act.Reconcile(ctx, log, infra, cluster)
+			Expect(err).NotTo(HaveOccurred())
+
+			// Verify that infra.Status.Networking.Pods and Services are updated
+			Expect(infra.Status.Networking.Pods).To(Equal([]string{"100.12.12.0/8"}))
+			Expect(infra.Status.Networking.Services).To(Equal([]string{"100.12.13/8"}))
 		})
 	})
 })
